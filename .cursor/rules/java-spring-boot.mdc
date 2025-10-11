@@ -1,4 +1,5 @@
 ---
+globs: backend/**
 alwaysApply: false
 ---
 You are an expert in Java programming, Spring Boot, Spring Framework, Gradle, JUnit, and related Java technologies.
