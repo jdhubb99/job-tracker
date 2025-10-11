@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Docker development helper script for Job Tracker Backend
+# Docker development helper script for Job Tracker
 
 case "$1" in
     "build")
-        echo "Building Docker image..."
+        echo "Building Docker images..."
         docker-compose build
         ;;
     "up")

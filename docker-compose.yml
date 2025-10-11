@@ -11,7 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ./backend/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - jobtracker-network
     healthcheck:
@@ -23,7 +23,7 @@ services:
   # Spring Boot Application
   app:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: jobtracker-backend
     environment:
