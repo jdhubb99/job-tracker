@@ -42,6 +42,10 @@ cd jobtracker
 
 # Or use docker-compose directly
 docker-compose up -d
+
+# If you've made code changes, rebuild the image first:
+./docker-dev.sh build
+./docker-dev.sh up
 ```
 
 ### 3. Verify Setup
@@ -237,6 +241,41 @@ The `docker-dev.sh` script provides convenient commands for Docker-based develop
 ./docker-dev.sh status    # Show service status
 ```
 
+### Important: Rebuilding After Code Changes
+When you make changes to the backend code, you need to rebuild the Docker image for the changes to take effect:
+
+```bash
+# After making code changes:
+./docker-dev.sh build     # Rebuild the image with your changes
+./docker-dev.sh up        # Start services with the new image
+```
+
+### Automatic Rebuild Options
+For development convenience, you can force Docker Compose to always rebuild:
+
+```bash
+# Force rebuild and start (ignores cache)
+docker-compose up --build
+
+# Or use the development script with build flag
+./docker-dev.sh build && ./docker-dev.sh up
+```
+
+**Alternative: Modify docker-compose.yml for Development**
+You can add `pull_policy: build` to the app service in `docker-compose.yml` to always rebuild:
+
+```yaml
+app:
+  build:
+    context: ./backend
+    dockerfile: Dockerfile
+  # Add this line for development:
+  pull_policy: build
+  # ... rest of configuration
+```
+
+**Note**: The `pull_policy: build` option will always rebuild the image, which is slower but ensures your code changes are always included.
+
 ### Gradle Tasks
 ```bash
 ./gradlew build           # Build the project
@@ -286,6 +325,14 @@ kill -9 <PID>
 docker system prune -a
 # Rebuild images
 ./docker-dev.sh build
+```
+
+**Code Changes Not Reflected**
+If you've made changes to the backend code but they're not showing up:
+```bash
+# Rebuild the Docker image to include your changes
+./docker-dev.sh build
+./docker-dev.sh up
 ```
 
 ### Logs and Debugging
