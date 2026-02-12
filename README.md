@@ -23,7 +23,8 @@ A full-stack job tracking application built with Spring Boot backend and modern 
 - [Java 25](https://openjdk.org/projects/jdk/25/) or later
 - [Gradle 9.0+](https://gradle.org/install/)
 - [PostgreSQL 18](https://www.postgresql.org/download/) or later
-- [Bun](https://bun.sh/) (for frontend development)
+- [Node.js 22+](https://nodejs.org/) (required by Vite 7)
+- [Bun](https://bun.sh/) (for frontend package management)
 
 ## Quick Start with Docker
 
@@ -114,8 +115,11 @@ cd frontend
 # Install dependencies
 bun install
 
-# Start development server
+# Start Vite dev server (port 3000, proxies /api to backend)
 bun run dev
+
+# Production build (type-checks then builds to dist/)
+bun run build
 ```
 
 ## Backend Architecture

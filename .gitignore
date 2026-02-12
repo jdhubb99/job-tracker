@@ -1,0 +1,4 @@
+# Editor/tool config (local only)
+CLAUDE.md
+.cursor/
+.github/copilot-instructions.md
