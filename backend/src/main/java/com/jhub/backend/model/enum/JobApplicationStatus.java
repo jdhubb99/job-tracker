@@ -1,4 +1,4 @@
-package com.jhub.backend.model;
+package com.jhub.backend.model.enums;
 
 public enum JobApplicationStatus {
     APPLIED,
@@ -6,5 +6,5 @@ public enum JobApplicationStatus {
     OFFER,
     REJECTED,
     WITHDRAWN,
-    ACCEPTED,
+    ACCEPTED
 }
