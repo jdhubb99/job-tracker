@@ -5,44 +5,44 @@
 case "$1" in
     "build")
         echo "Building Docker images..."
-        docker-compose build
+        docker compose build
         ;;
     "up")
         echo "Starting services..."
-        docker-compose up -d
+        docker compose up -d
         ;;
     "down")
         echo "Stopping services..."
-        docker-compose down
+        docker compose down
         ;;
     "logs")
         echo "Showing logs..."
-        docker-compose logs -f app
+        docker compose logs -f app
         ;;
     "logs-db")
         echo "Showing database logs..."
-        docker-compose logs -f postgres
+        docker compose logs -f postgres
         ;;
     "restart")
         echo "Restarting application..."
-        docker-compose restart app
+        docker compose restart app
         ;;
     "clean")
         echo "Cleaning up containers and volumes..."
-        docker-compose down -v
+        docker compose down -v
         docker system prune -f
         ;;
     "shell")
         echo "Opening shell in app container..."
-        docker-compose exec app sh
+        docker compose exec app sh
         ;;
     "db-shell")
         echo "Opening PostgreSQL shell..."
-        docker-compose exec postgres psql -U postgres -d jobtracker
+        docker compose exec postgres psql -U postgres -d jobtracker
         ;;
     "status")
         echo "Service status:"
-        docker-compose ps
+        docker compose ps
         ;;
     *)
         echo "Usage: $0 {build|up|down|logs|logs-db|restart|clean|shell|db-shell|status}"
