@@ -17,7 +17,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = { "jobApplications", "notes" })
+@ToString(exclude = { "jobApplications" })
 @EqualsAndHashCode(of = "id")
 public class User {
 
@@ -56,13 +56,6 @@ public class User {
     )
     private List<JobApplication> jobApplications = new ArrayList<>();
 
-    @OneToMany(
-        mappedBy = "user",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    private List<Note> notes = new ArrayList<>();
-
     @Builder
     public User(
         String email,
@@ -96,15 +89,5 @@ public class User {
     public void removeJobApplication(JobApplication jobApplication) {
         jobApplications.remove(jobApplication);
         jobApplication.setUser(null);
-    }
-
-    public void addNote(Note note) {
-        notes.add(note);
-        note.setUser(this);
-    }
-
-    public void removeNote(Note note) {
-        notes.remove(note);
-        note.setUser(null);
     }
 }
