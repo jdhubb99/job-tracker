@@ -11,7 +11,6 @@ A full-stack job tracking application built with Spring Boot backend and modern 
 - [API Documentation](#api-documentation)
 - [Development Tools](#development-tools)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
 
 ## Prerequisites
 
@@ -32,7 +31,7 @@ The easiest way to get started is using Docker Compose, which will set up both t
 
 ### 1. Clone and Navigate
 ```bash
-git clone <repository-url>
+git clone https://github.com/jdhubb99/job-tracker.git
 cd jobtracker
 ```
 
