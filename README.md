@@ -32,7 +32,7 @@ The easiest way to get started is using Docker Compose, which will set up both t
 ### 1. Clone and Navigate
 ```bash
 git clone https://github.com/jdhubb99/job-tracker.git
-cd jobtracker
+cd job-tracker
 ```
 
 ### 2. Start Services
@@ -40,8 +40,8 @@ cd jobtracker
 # Start all services (backend + PostgreSQL)
 ./docker-dev.sh up
 
-# Or use docker-compose directly
-docker-compose up -d
+# Or use docker compose directly
+docker compose up -d
 
 # If you've made code changes, rebuild the image first:
 ./docker-dev.sh build
@@ -258,7 +258,7 @@ For development convenience, you can force Docker Compose to always rebuild:
 
 ```bash
 # Force rebuild and start (ignores cache)
-docker-compose up --build
+docker compose up --build
 
 # Or use the development script with build flag
 ./docker-dev.sh build && ./docker-dev.sh up
@@ -291,7 +291,7 @@ app:
 ## Project Structure
 
 ```
-jobtracker/
+job-tracker/
 ├── backend/                 # Spring Boot backend
 │   ├── src/main/java/      # Java source code
 │   ├── src/main/resources/ # Configuration files
