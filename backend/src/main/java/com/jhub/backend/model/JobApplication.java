@@ -1,7 +1,7 @@
 package com.jhub.backend.model;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +11,9 @@ import com.jhub.backend.model.enums.JobApplicationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * represents a job application tracked by a user
@@ -18,6 +21,7 @@ import lombok.*;
  */
 @Entity
 @Table(name = "job_applications")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,18 +31,20 @@ public class JobApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     @NotBlank(message = "Company name is required")
+    @Size(max = 255, message = "Company name must not exceed 255 characters")
     private String company;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     @NotBlank(message = "Job title is required")
+    @Size(max = 255, message = "Job title must not exceed 255 characters")
     private String jobTitle;
 
     @Enumerated(EnumType.STRING)
@@ -48,12 +54,18 @@ public class JobApplication {
     @Column(nullable = false)
     private LocalDate dateApplied;
 
+    @Column(length = 2048)
+    @Size(max = 2048, message = "Job posting URL must not exceed 2048 characters")
     private String jobPostingUrl;
 
+    @Column(length = 255)
+    @Size(max = 255, message = "Location must not exceed 255 characters")
     private String location;
 
+    @Min(value = 0, message = "Minimum salary must not be negative")
     private Integer salaryMin;
 
+    @Min(value = 0, message = "Maximum salary must not be negative")
     private Integer salaryMax;
 
     @Column(columnDefinition = "TEXT")
@@ -66,11 +78,13 @@ public class JobApplication {
     )
     private List<Note> notes = new ArrayList<>();
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
+    @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @Builder
     public JobApplication(
@@ -95,18 +109,6 @@ public class JobApplication {
         this.salaryMin = salaryMin;
         this.salaryMax = salaryMax;
         this.description = description;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void addNote(Note note) {
