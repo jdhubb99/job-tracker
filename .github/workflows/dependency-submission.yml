@@ -23,6 +23,6 @@ jobs:
           java-version: '25'
 
       - name: Submit Gradle dependencies
-        uses: gradle/actions/dependency-submission@v4
+        uses: gradle/actions/dependency-submission@v5
         with:
           build-root-directory: backend
