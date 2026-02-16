@@ -124,12 +124,11 @@ bun run build
 ## Backend Architecture
 
 ### Technology Stack
-- **Framework**: Spring Boot 3.5.6
+- **Framework**: Spring Boot 4.x
 - **Language**: Java 25
 - **Build Tool**: Gradle with Kotlin DSL
 - **Database**: PostgreSQL 18
 - **ORM**: Spring Data JPA with Hibernate
-- **Validation**: Bean Validation (JSR-303)
 - **Testing**: JUnit 5, Spring Boot Test, Testcontainers
 
 ### Architecture Patterns
