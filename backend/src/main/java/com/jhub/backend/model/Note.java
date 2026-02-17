@@ -25,7 +25,7 @@ public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_application_id", nullable = false)
