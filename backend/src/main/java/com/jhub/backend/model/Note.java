@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,7 +21,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(exclude = { "jobApplication" })
-@EqualsAndHashCode(of = "id")
 public class Note {
 
     @Id
@@ -59,5 +59,18 @@ public class Note {
         this.content = content;
         this.followUp = followUp;
         this.followUpDate = followUpDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note other = (Note) o;
+        return id != null && Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

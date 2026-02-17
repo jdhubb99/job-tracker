@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.Objects;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -23,7 +25,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(exclude = { "jobApplications" })
-@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
@@ -87,5 +88,18 @@ public class User {
     public void removeJobApplication(JobApplication jobApplication) {
         jobApplications.remove(jobApplication);
         jobApplication.setUser(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User other = (User) o;
+        return id != null && Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
