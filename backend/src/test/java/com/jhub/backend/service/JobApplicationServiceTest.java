@@ -78,6 +78,23 @@ class JobApplicationServiceTest {
     }
 
     @Nested
+    class ResponseMapping {
+
+        @Test
+        void responseContainsUserIdNotUserEntity() {
+            when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+
+            JobApplicationResponse result = service.getApplicationById(userId, applicationId);
+
+            assertThat(result.userId()).isEqualTo(userId);
+            assertThat(result).hasNoNullFieldsOrProperties();
+            assertThat(result.getClass().getRecordComponents())
+                    .extracting("name")
+                    .doesNotContain("user");
+        }
+    }
+
+    @Nested
     class GetAllApplicationsForUser {
 
         @Test
@@ -158,6 +175,34 @@ class JobApplicationServiceTest {
 
             assertThatThrownBy(() -> service.getApplicationById(otherUserId, applicationId))
                     .isInstanceOf(ResourceNotFoundException.class);
+        }
+
+        @Test
+        void ownershipFailureIsIndistinguishableFromNotFound() {
+            UUID otherUserId = UUID.randomUUID();
+            UUID missingId = UUID.randomUUID();
+
+            when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+            when(jobApplicationRepository.findById(missingId)).thenReturn(Optional.empty());
+
+            ResourceNotFoundException ownershipError = null;
+            ResourceNotFoundException notFoundError = null;
+
+            try {
+                service.getApplicationById(otherUserId, applicationId);
+            } catch (ResourceNotFoundException e) {
+                ownershipError = e;
+            }
+            try {
+                service.getApplicationById(userId, missingId);
+            } catch (ResourceNotFoundException e) {
+                notFoundError = e;
+            }
+
+            assertThat(ownershipError).isNotNull();
+            assertThat(notFoundError).isNotNull();
+            assertThat(ownershipError.getResourceName()).isEqualTo(notFoundError.getResourceName());
+            assertThat(ownershipError.getFieldName()).isEqualTo(notFoundError.getFieldName());
         }
     }
 
@@ -264,6 +309,30 @@ class JobApplicationServiceTest {
             assertThat(result.company()).isEqualTo("Acme Corp");
             assertThat(result.jobTitle()).isEqualTo("Software Engineer");
             assertThat(result.status()).isEqualTo(JobApplicationStatus.APPLIED);
+        }
+
+        @Test
+        void updatesAllFieldsWhenAllProvided() {
+            JobApplicationUpdateRequest request = new JobApplicationUpdateRequest(
+                    "New Company", "New Title", LocalDate.of(2026, 6, 1),
+                    JobApplicationStatus.OFFER, "https://new.com",
+                    "Berlin", 150000, 200000, "New description"
+            );
+
+            when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+            when(jobApplicationRepository.save(any(JobApplication.class))).thenReturn(application);
+
+            JobApplicationResponse result = service.updateApplication(userId, applicationId, request);
+
+            assertThat(result.company()).isEqualTo("New Company");
+            assertThat(result.jobTitle()).isEqualTo("New Title");
+            assertThat(result.dateApplied()).isEqualTo(LocalDate.of(2026, 6, 1));
+            assertThat(result.status()).isEqualTo(JobApplicationStatus.OFFER);
+            assertThat(result.jobPostingUrl()).isEqualTo("https://new.com");
+            assertThat(result.location()).isEqualTo("Berlin");
+            assertThat(result.salaryMin()).isEqualTo(150000);
+            assertThat(result.salaryMax()).isEqualTo(200000);
+            assertThat(result.description()).isEqualTo("New description");
         }
 
         @Test
