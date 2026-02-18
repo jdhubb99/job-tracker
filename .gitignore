@@ -3,3 +3,6 @@ CLAUDE.md
 .cursor/
 .github/copilot-instructions.md
 .idea/
+*/plans
+.env
+.mcp.json

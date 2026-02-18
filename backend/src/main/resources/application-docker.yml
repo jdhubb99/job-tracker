@@ -27,7 +27,7 @@ management:
 
 logging:
   level:
-    "[com.jhub.backend]": INFO
-    "[org.springframework.web]": WARN
-    "[org.hibernate.SQL]": WARN
+    com.jhub.backend: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
     root: WARN
