@@ -11,9 +11,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    open-in-view: false
 
 logging:
   level:
-    "[org.springframework.web]": DEBUG
-    "[com.jhub.backend]": DEBUG
+    org.springframework.web: DEBUG
+    com.jhub.backend: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
