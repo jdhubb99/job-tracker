@@ -8,7 +8,6 @@ import org.testcontainers.junit.jupiter.Container;
 @TestConfiguration
 public class TestContainersConfig {
 
-	@Container
 	@ServiceConnection
 	static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18-alpine")
 			.withDatabaseName("testdb")
