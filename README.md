@@ -153,7 +153,7 @@ bun run build
 
 ### Current Project Structure
 
-```
+```text
 backend/src/main/java/com/jhub/backend/
 ├── config/              # Configuration classes
 ├── controller/          # REST controllers
