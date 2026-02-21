@@ -4,79 +4,69 @@ A full-stack job tracking application built with Spring Boot backend and modern 
 
 ## Table of Contents
 
+- [Quick Start](#quick-start)
 - [Prerequisites](#prerequisites)
-- [Quick Start with Docker](#quick-start-with-docker)
-- [Local Development Setup](#local-development-setup)
+- [Development Setup](#development-setup)
 - [Backend Architecture](#backend-architecture)
 - [API Documentation](#api-documentation)
-- [Development Tools](#development-tools)
-- [Project Structure](#project-structure)
+- [Docker Setup](#docker-setup)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
+
+## Quick Start
+
+```bash
+# Clone and start with Docker
+cd jobtracker
+./docker-dev.sh up
+
+# Access the application
+# Backend API: http://localhost:8080
+# Database: localhost:5432
+```
 
 ## Prerequisites
 
-### For Docker Setup
-- [Docker](https://docs.docker.com/get-docker/) (v20.10+)
-- [Docker Compose](https://docs.docker.com/compose/install/) (v2.0+)
+### Required Software
 
-### For Local Development
-- [Java 25](https://openjdk.org/projects/jdk/25/) or later
-- [Gradle 9.0+](https://gradle.org/install/)
-- [PostgreSQL 18](https://www.postgresql.org/download/) or later
-- [Node.js 22+](https://nodejs.org/) (required by Vite 7)
-- [Bun](https://bun.sh/) (for frontend package management)
+- **Java 25+** (for backend development)
+- **Docker & Docker Compose** (recommended for full stack)
+- **Git**
 
-## Quick Start with Docker
+### Optional (for local development)
+
+- **PostgreSQL 18+** (if not using Docker)
+- **Node.js 22+** and **Bun** (for frontend development)
+
+## Development Setup
+
+### Option 1: Docker (Recommended)
 
 The easiest way to get started is using Docker Compose, which will set up both the backend and database services.
 
-### 1. Clone and Navigate
 ```bash
-git clone https://github.com/jdhubb99/job-tracker.git
-cd job-tracker
-```
+# Clone repository
+cd jobtracker
 
-### 2. Start Services
-```bash
 # Start all services (backend + PostgreSQL)
 ./docker-dev.sh up
 
-# Or use docker compose directly
-docker compose up -d
-
-# If you've made code changes, rebuild the image first:
-./docker-dev.sh build
-./docker-dev.sh up
-```
-
-### 3. Verify Setup
-```bash
-# Check service status
-./docker-dev.sh status
-
-# Test the health endpoint
-curl http://localhost:8080/api/health
-
-# View application logs
+# View logs
 ./docker-dev.sh logs
-```
 
-### 4. Stop Services
-```bash
-# Stop all services
+# Stop services
 ./docker-dev.sh down
-
-# Clean up (removes volumes and containers)
-./docker-dev.sh clean
 ```
 
-## Local Development Setup
-
-### Backend Setup
+### Option 2: Local Development
 
 #### 1. Database Setup
+
 ```bash
-# Install and start PostgreSQL
-# Create database and user
+# Start PostgreSQL (example with local installation)
+sudo systemctl start postgresql
+
+# Create database
 sudo -u postgres psql
 CREATE DATABASE jobtracker;
 CREATE USER postgres WITH PASSWORD 'postgres';
@@ -105,6 +95,9 @@ export DB_PORT=5432
 export DB_NAME=jobtracker
 export DB_USERNAME=postgres
 export DB_PASSWORD=postgres
+export JWT_SECRET=replace-with-a-32-byte-minimum-secret
+export JWT_EXPIRATION=PT24H
+export CORS_ALLOWED_ORIGINS=http://localhost:5173
 ```
 
 ### Frontend Setup
@@ -142,32 +135,54 @@ bun run build
 ├─────────────────┤
 │  Repositories   │ ← Data Access Layer
 ├─────────────────┤
-│     Models      │ ← Entity Layer
+│    Models       │ ← Domain Entities
 └─────────────────┘
 ```
 
-#### 2. Package Structure
-```
-com.jhub.backend/
-├── config/         # Configuration classes
-├── controller/     # REST controllers
-├── dto/            # Data Transfer Objects
-├── model/          # JPA entities
-├── repository/     # Data repositories
-└── service/        # Business logic services
-```
+#### 2. Domain-Driven Design Elements
 
-#### 3. Key Components
+**Entities**
+- `User`: User account and profile information
+- `JobApplication`: Job application tracking with status management
+- `Note`: Application-specific notes and follow-up tracking
 
-**Controllers** (`@RestController`)
-- Handle HTTP requests and responses
-- Input validation and error handling
-- RESTful API design
-
-**Services** (`@Service`)
-- Business logic implementation
+**Services**
+- Business logic encapsulation
 - Transaction management
-- Integration with repositories
+- Data validation and transformation
+
+### Current Project Structure
+
+```text
+backend/src/main/java/com/jhub/backend/
+├── config/              # Configuration classes
+├── controller/          # REST controllers
+├── dto/                 # Data transfer objects
+├── model/               # JPA entities
+│   └── enums/          # Domain enums
+├── repository/          # Data access layer
+└── service/             # Business logic layer
+```
+
+### Service Layer Design
+
+The `JobApplicationService` demonstrates clean architecture principles:
+
+- **CRUD Operations**: Full create, read, update, delete functionality
+- **User Ownership Validation**: Ensures users can only access their own data
+- **DTO Mapping**: Clean separation between entities and API contracts
+- **Error Handling**: Consistent exception handling with meaningful messages
+
+#### Key Service Methods
+
+- `getAllApplicationsForUser(UUID userId)`
+- `getApplicationsByStatus(UUID userId, JobApplicationStatus status)`
+- `getApplicationById(UUID userId, UUID applicationId)`
+- `createApplication(UUID userId, JobApplicationCreateRequest request)`
+- `updateApplication(UUID userId, UUID applicationId, JobApplicationUpdateRequest request)`
+- `deleteApplication(UUID userId, UUID applicationId)`
+
+### Data Access Patterns
 
 **Repositories** (`@Repository`)
 - Data access abstraction
@@ -220,130 +235,132 @@ Simple connectivity test endpoint.
 pong
 ```
 
-### Spring Boot Actuator Endpoints
-- `/actuator/health` - Application health status
-- `/actuator/info` - Application information
-- `/actuator/metrics` - Application metrics
+## Docker Setup
 
-## Development Tools
+### Development Environment
 
-### Docker Development Script
-The `docker-dev.sh` script provides convenient commands for Docker-based development:
-
-```bash
-./docker-dev.sh build     # Build Docker images
-./docker-dev.sh up        # Start all services
-./docker-dev.sh down      # Stop all services
-./docker-dev.sh logs      # Show application logs
-./docker-dev.sh logs-db   # Show database logs
-./docker-dev.sh restart   # Restart application
-./docker-dev.sh clean     # Clean up containers and volumes
-./docker-dev.sh shell     # Open shell in app container
-./docker-dev.sh db-shell  # Open PostgreSQL shell
-./docker-dev.sh status    # Show service status
-```
-
-### Important: Rebuilding After Code Changes
-When you make changes to the backend code, you need to rebuild the Docker image for the changes to take effect:
-
-```bash
-# After making code changes:
-./docker-dev.sh build     # Rebuild the image with your changes
-./docker-dev.sh up        # Start services with the new image
-```
-
-### Automatic Rebuild Options
-For development convenience, you can force Docker Compose to always rebuild:
-
-```bash
-# Force rebuild and start (ignores cache)
-docker compose up --build
-
-# Or use the development script with build flag
-./docker-dev.sh build && ./docker-dev.sh up
-```
-
-**Alternative: Modify docker-compose.yml for Development**
-You can add `pull_policy: build` to the app service in `docker-compose.yml` to always rebuild:
+The project includes a complete Docker setup for development:
 
 ```yaml
-app:
-  build:
-    context: ./backend
-    dockerfile: Dockerfile
-  # Add this line for development:
-  pull_policy: build
-  # ... rest of configuration
+services:
+  postgres:
+    image: postgres:18
+    ports: ["5432:5432"]
+
+  backend:
+    build: ./backend
+    ports: ["8080:8080"]
+    depends_on: [postgres]
 ```
 
-**Note**: The `pull_policy: build` option will always rebuild the image, which is slower but ensures your code changes are always included.
+### Docker Commands
 
-### Gradle Tasks
 ```bash
-./gradlew build           # Build the project
-./gradlew bootRun         # Run the application
-./gradlew test            # Run tests
-./gradlew clean           # Clean build artifacts
-./gradlew bootJar         # Create executable JAR
+# Start services
+./docker-dev.sh up
+
+# Rebuild and start
+./docker-dev.sh build
+./docker-dev.sh up
+
+# Stop services
+./docker-dev.sh down
+
+# View logs
+./docker-dev.sh logs
+
+# Execute command in backend container
+./docker-dev.sh shell
 ```
 
-## Project Structure
+## Contributing
 
-```
-job-tracker/
-├── backend/                 # Spring Boot backend
-│   ├── src/main/java/      # Java source code
-│   ├── src/main/resources/ # Configuration files
-│   ├── src/test/           # Test code
-│   ├── init-scripts/       # Database initialization
-│   ├── build.gradle.kts    # Gradle build configuration
-│   └── Dockerfile          # Backend container definition
-├── frontend/               # Frontend application
-├── docker-compose.yml      # Multi-service orchestration
-├── docker-dev.sh          # Development helper script
-└── README.md              # This file
+### Development Workflow
+
+1. Create feature branch from `main`
+2. Make changes with appropriate tests
+3. Ensure all tests pass
+4. Submit pull request
+
+### Code Standards
+
+- Follow Java naming conventions
+- Write comprehensive tests for business logic
+- Use meaningful commit messages
+- Update documentation for API changes
+
+### Testing Strategy
+
+#### Unit Tests
+- Service layer business logic
+- DTO validation
+- Utility functions
+
+#### Integration Tests
+- Repository layer with Testcontainers
+- API endpoint testing
+- Database migration verification
+
+#### Running Tests
+
+```bash
+cd backend
+
+# Run all tests
+./gradlew test
+
+# Run specific test class
+./gradlew test --tests JobApplicationServiceTest
+
+# Run with verbose output
+./gradlew test --info
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Port Already in Use**
+#### Port Conflicts
 ```bash
-# Find process using port 8080
+# Check what's using port 8080
 lsof -i :8080
-# Kill the process
-kill -9 <PID>
+
+# Check what's using port 5432
+lsof -i :5432
 ```
 
-**Database Connection Issues**
-- Verify PostgreSQL is running
-- Check connection parameters in `application.yml`
-- Ensure database and user exist
+#### Database Connection Issues
 
-**Docker Issues**
+1. Ensure PostgreSQL is running
+2. Check environment variables
+3. Verify database exists
+4. Check firewall settings
+
+#### Docker Issues
 ```bash
 # Clean up Docker resources
-docker system prune -a
-# Rebuild images
-./docker-dev.sh build
-```
+./docker-dev.sh clean
 
-**Code Changes Not Reflected**
-If you've made changes to the backend code but they're not showing up:
-```bash
-# Rebuild the Docker image to include your changes
+# Force rebuild
 ./docker-dev.sh build
 ./docker-dev.sh up
 ```
 
 ### Logs and Debugging
+
 ```bash
-# View application logs
+# Backend logs (Docker)
 ./docker-dev.sh logs
 
-# Enable debug logging
-export LOGGING_LEVEL_COM_JHUB_BACKEND=DEBUG
-./gradlew bootRun
+# Database logs
+./docker-dev.sh logs-db
+
+# Follow logs in real-time
+./docker-dev.sh logs
 ```
 
+### Performance Considerations
+
+- Database connection pool is configured for development workloads
+- JPA `open-in-view` is disabled for better performance
+- SQL logging is enabled in development, disabled in Docker profile

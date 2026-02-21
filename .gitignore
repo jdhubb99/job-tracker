@@ -1,5 +1,6 @@
 # Editor/tool config (local only)
 CLAUDE.md
+AGENTS.md
 .cursor/
 .github/copilot-instructions.md
 .idea/
