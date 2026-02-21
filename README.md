@@ -260,7 +260,8 @@ services:
 ./docker-dev.sh up
 
 # Rebuild and start
-./docker-dev.sh up --build
+./docker-dev.sh build
+./docker-dev.sh up
 
 # Stop services
 ./docker-dev.sh down
@@ -269,7 +270,7 @@ services:
 ./docker-dev.sh logs
 
 # Execute command in backend container
-./docker-dev.sh exec backend /bin/bash
+./docker-dev.sh shell
 ```
 
 ## Contributing
@@ -341,20 +342,21 @@ lsof -i :5432
 ./docker-dev.sh clean
 
 # Force rebuild
-./docker-dev.sh up --build --force-recreate
+./docker-dev.sh build
+./docker-dev.sh up
 ```
 
 ### Logs and Debugging
 
 ```bash
 # Backend logs (Docker)
-./docker-dev.sh logs backend
+./docker-dev.sh logs
 
 # Database logs
-./docker-dev.sh logs postgres
+./docker-dev.sh logs-db
 
 # Follow logs in real-time
-./docker-dev.sh logs -f
+./docker-dev.sh logs
 ```
 
 ### Performance Considerations
