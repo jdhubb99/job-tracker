@@ -13,4 +13,5 @@ pre-commit:
 
     backend-format:
       glob: "backend/**/*.java"
-      run: cd backend && ./gradlew spotlessCheck
+      run: cd backend && ./gradlew spotlessApply
+      stage_fixed: true
