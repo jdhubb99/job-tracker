@@ -38,7 +38,7 @@ case "$1" in
         ;;
     "db-shell")
         echo "Opening PostgreSQL shell..."
-        docker compose exec postgres psql -U postgres -d jobtracker
+        docker compose exec postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
         ;;
     "status")
         echo "Service status:"

@@ -18,6 +18,7 @@ A full-stack job tracking application built with Spring Boot backend and modern 
 ```bash
 # Clone and start with Docker
 cd jobtracker
+cp .env.example .env
 ./docker-dev.sh up
 
 # Access the application
@@ -47,6 +48,7 @@ The easiest way to get started is using Docker Compose, which will set up both t
 ```bash
 # Clone repository
 cd jobtracker
+cp .env.example .env
 
 # Start all services (backend + PostgreSQL)
 ./docker-dev.sh up
@@ -88,8 +90,12 @@ cd backend
 ./gradlew bootRun --args='--spring.profiles.active=dev'
 ```
 
-#### 3. Environment Variables (Optional)
+#### 3. Environment Variables (Required)
 ```bash
+# Copy baseline values, then edit for your environment
+cp ../.env.example ../.env
+
+# Or export directly in your shell:
 export DB_HOST=localhost
 export DB_PORT=5432
 export DB_NAME=jobtracker
