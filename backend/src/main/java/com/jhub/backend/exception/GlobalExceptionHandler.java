@@ -61,7 +61,10 @@ public class GlobalExceptionHandler {
         RuntimeException exception,
         HttpServletRequest request
     ) {
-        return buildResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request, null);
+        String message = exception instanceof IllegalArgumentException
+            ? "Bad request"
+            : exception.getMessage();
+        return buildResponse(HttpStatus.BAD_REQUEST, message, request, null);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
