@@ -1,0 +1,10 @@
+{
+  "name": "job-tracker",
+  "private": true,
+  "scripts": {
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "lefthook": "^1"
+  }
+}

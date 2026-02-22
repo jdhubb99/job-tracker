@@ -1,3 +1,7 @@
+# Root tooling
+node_modules/
+bun.lockb
+
 # Editor/tool config (local only)
 CLAUDE.md
 AGENTS.md
