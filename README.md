@@ -281,6 +281,53 @@ services:
 ./docker-dev.sh shell
 ```
 
+## Code Style & Formatting
+
+Formatting is enforced automatically via pre-commit hooks (Lefthook) and CI checks.
+
+### One-time setup
+
+Install git hooks after cloning by running `bun install` from the repo root:
+
+```bash
+bun install   # installs lefthook and runs `lefthook install` automatically
+```
+
+### Frontend (Prettier + ESLint)
+
+```bash
+cd frontend
+
+# Auto-fix all files
+bun run format
+
+# Check formatting without writing (used in CI)
+bun run format:check
+
+# Lint
+bun run lint
+```
+
+The pre-commit hook automatically runs Prettier on staged `.ts/.tsx/.js/.css/.json` files and re-stages them, then runs ESLint. A commit is blocked if ESLint reports any errors or warnings.
+
+### Backend (Spotless + Google Java Format)
+
+```bash
+cd backend
+
+# Auto-fix all Java files
+./gradlew spotlessApply
+
+# Check formatting without writing (used in CI and pre-commit hook)
+./gradlew spotlessCheck
+```
+
+The pre-commit hook runs `spotlessCheck` whenever `.java` files are staged. If it fails, run `spotlessApply` to fix, then re-stage and commit.
+
+### Editor config
+
+A root `.editorconfig` sets charset, line endings, and indentation for all editors. Most editors pick this up automatically.
+
 ## Contributing
 
 ### Development Workflow
