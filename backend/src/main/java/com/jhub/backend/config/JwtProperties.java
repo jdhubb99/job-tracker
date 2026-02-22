@@ -12,7 +12,8 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "app.jwt")
 public record JwtProperties(
     @NotBlank String secret,
-    @NotNull Duration expiration
+    @NotNull Duration expiration,
+    @NotBlank String issuer
 ) {
     private static final int MIN_SECRET_BYTES = 32;
 
