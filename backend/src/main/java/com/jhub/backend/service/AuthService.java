@@ -78,7 +78,7 @@ public class AuthService {
         Instant expiresAt = issuedAt.plus(jwtProperties.expiration());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuer("job-tracker")
+            .issuer(jwtProperties.issuer())
             .subject(user.getId().toString())
             .issuedAt(issuedAt)
             .expiresAt(expiresAt)

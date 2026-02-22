@@ -144,6 +144,7 @@ class AuthServiceTest {
 
     private void mockJwtEncoding() {
         when(jwtProperties.expiration()).thenReturn(Duration.ofHours(24));
+        when(jwtProperties.issuer()).thenReturn("job-tracker-test");
         when(jwtEncoder.encode(any(JwtEncoderParameters.class))).thenReturn(new Jwt(
             "test.jwt.token",
             Instant.now(),

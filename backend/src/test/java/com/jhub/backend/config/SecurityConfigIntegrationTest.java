@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(properties = {
     "app.jwt.secret=test-secret-key-that-is-at-least-32-bytes-long",
     "app.jwt.expiration=PT24H",
+    "app.jwt.issuer=job-tracker-test",
     "app.cors.allowed-origins=http://localhost:5173"
 })
 class SecurityConfigIntegrationTest {

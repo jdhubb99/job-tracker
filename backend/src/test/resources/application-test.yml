@@ -7,5 +7,6 @@ app:
   jwt:
     secret: test-secret-key-that-is-at-least-32-bytes-long
     expiration: PT24H
+    issuer: job-tracker-test
   cors:
     allowed-origins: http://localhost:5173
