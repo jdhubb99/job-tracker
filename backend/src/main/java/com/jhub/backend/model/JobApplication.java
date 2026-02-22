@@ -15,8 +15,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
- * represents a job application tracked by a user each user can have many job applications, and each
- * job application can have many notes
+ * represents a job application tracked by a user. each user can have many job applications, and
+ * each job application can have many notes
  */
 @Entity
 @Table(name = "job_applications")
