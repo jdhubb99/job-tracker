@@ -17,7 +17,7 @@ java {
 
 spotless {
 	java {
-		googleJavaFormat()
+		googleJavaFormat("1.27.0")
 		removeUnusedImports()
 		trimTrailingWhitespace()
 		endWithNewline()
