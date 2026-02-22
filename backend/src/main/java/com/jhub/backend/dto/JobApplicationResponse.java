@@ -1,11 +1,10 @@
 package com.jhub.backend.dto;
 
+import com.jhub.backend.model.JobApplication;
+import com.jhub.backend.model.enums.JobApplicationStatus;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
-
-import com.jhub.backend.model.JobApplication;
-import com.jhub.backend.model.enums.JobApplicationStatus;
 
 public record JobApplicationResponse(
     UUID id,
@@ -20,23 +19,21 @@ public record JobApplicationResponse(
     Integer salaryMax,
     String description,
     Instant createdAt,
-    Instant updatedAt
-) {
-    public static JobApplicationResponse from(JobApplication entity) {
-        return new JobApplicationResponse(
-            entity.getId(),
-            entity.getUser().getId(),
-            entity.getCompany(),
-            entity.getJobTitle(),
-            entity.getStatus(),
-            entity.getDateApplied(),
-            entity.getJobPostingUrl(),
-            entity.getLocation(),
-            entity.getSalaryMin(),
-            entity.getSalaryMax(),
-            entity.getDescription(),
-            entity.getCreatedAt(),
-            entity.getUpdatedAt()
-        );
-    }
+    Instant updatedAt) {
+  public static JobApplicationResponse from(JobApplication entity) {
+    return new JobApplicationResponse(
+        entity.getId(),
+        entity.getUser().getId(),
+        entity.getCompany(),
+        entity.getJobTitle(),
+        entity.getStatus(),
+        entity.getDateApplied(),
+        entity.getJobPostingUrl(),
+        entity.getLocation(),
+        entity.getSalaryMin(),
+        entity.getSalaryMax(),
+        entity.getDescription(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
+  }
 }

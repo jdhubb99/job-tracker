@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "4.0.2"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("com.diffplug.spotless") version "8.2.1"
 }
 
 group = "com.jhub"
@@ -11,6 +12,15 @@ description = "Backend for Job Tracker app"
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+spotless {
+	java {
+		googleJavaFormat("1.34.1")
+		removeUnusedImports()
+		trimTrailingWhitespace()
+		endWithNewline()
 	}
 }
 
