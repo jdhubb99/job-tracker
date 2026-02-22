@@ -47,7 +47,7 @@ public class AuthService {
     public AuthTokenResponse register(UserRegistrationRequest request) {
         String normalizedEmail = normalizeEmail(request.email());
         if (userRepository.existsByEmail(normalizedEmail)) {
-            throw new EmailAlreadyExistsException(normalizedEmail);
+            throw new EmailAlreadyExistsException();
         }
 
         User user = User.builder()
