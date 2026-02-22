@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    username: test
+    password: test
+
+app:
+  jwt:
+    secret: test-secret-key-that-is-at-least-32-bytes-long
+    expiration: PT24H
+  cors:
+    allowed-origins: http://localhost:5173
