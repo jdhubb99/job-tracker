@@ -127,7 +127,8 @@ bun run build
 - **Language**: Java 25
 - **Build Tool**: Gradle with Kotlin DSL
 - **Database**: PostgreSQL 18
-- **ORM**: Spring Data JPA with Hibernate
+- **ORM**: Spring Data JPA with Hibernate (`ddl-auto: validate`)
+- **Migrations**: Flyway SQL migrations (`backend/src/main/resources/db/migration`)
 - **Testing**: JUnit 5, Spring Boot Test, Testcontainers
 
 ### Architecture Patterns
@@ -215,6 +216,7 @@ The `JobApplicationService` demonstrates clean architecture principles:
 #### Key Configuration Files
 - `application.yml`: Base configuration
 - `application-docker.yml`: Docker-specific settings
+- `application-test.yml`: Test profile configuration
 - Environment variables for sensitive data
 
 ## API Documentation
