@@ -1,7 +1,15 @@
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    locations: classpath:db/migration
   datasource:
-    username: test
-    password: test
+    hikari:
+      maximum-pool-size: 5
 
 app:
   jwt:
