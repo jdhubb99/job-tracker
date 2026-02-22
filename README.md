@@ -322,7 +322,7 @@ cd backend
 ./gradlew spotlessCheck
 ```
 
-The pre-commit hook runs `spotlessCheck` whenever `.java` files are staged. If it fails, run `spotlessApply` to fix, then re-stage and commit.
+The pre-commit hook runs `spotlessApply` whenever `.java` files are staged.
 
 ### Editor config
 
