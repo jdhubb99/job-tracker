@@ -31,5 +31,13 @@ export default tseslint.config(
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // TanStack Router route files always export a non-component `Route` constant
+    // alongside a component — suppress the fast-refresh warning for them.
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
   eslintConfigPrettier
 );
