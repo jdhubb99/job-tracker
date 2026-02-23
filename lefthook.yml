@@ -9,7 +9,7 @@ pre-commit:
 
     frontend-lint:
       glob: "frontend/**/*.{ts,tsx}"
-      run: frontend/node_modules/.bin/eslint --max-warnings=0 {staged_files}
+      run: export NVM_DIR="${NVM_DIR:-$HOME/.nvm}" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use && frontend/node_modules/.bin/eslint --max-warnings=0 {staged_files}
 
     backend-format:
       glob: "backend/**/*.java"
