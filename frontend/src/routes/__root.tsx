@@ -1,11 +1,21 @@
+import { lazy, Suspense } from 'react';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+
+const TanStackRouterDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import('@tanstack/react-router-devtools').then((res) => ({
+        default: res.TanStackRouterDevtools,
+      }))
+    )
+  : () => null;
 
 export const Route = createRootRoute({
   component: () => (
     <>
       <Outlet />
-      {import.meta.env.DEV && <TanStackRouterDevtools />}
+      <Suspense>
+        <TanStackRouterDevtools />
+      </Suspense>
     </>
   ),
 });
