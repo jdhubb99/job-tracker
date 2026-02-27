@@ -298,7 +298,8 @@ class JobApplicationServiceTest {
               "Updated Corp", null, null, null, null, null, null, null, null);
 
       when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-      when(jobApplicationRepository.save(any(JobApplication.class))).thenReturn(application);
+      when(jobApplicationRepository.saveAndFlush(any(JobApplication.class)))
+          .thenReturn(application);
 
       JobApplicationResponse result = service.updateApplication(userId, applicationId, request);
 
@@ -312,7 +313,8 @@ class JobApplicationServiceTest {
           new JobApplicationUpdateRequest(null, null, null, null, null, null, null, null, null);
 
       when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-      when(jobApplicationRepository.save(any(JobApplication.class))).thenReturn(application);
+      when(jobApplicationRepository.saveAndFlush(any(JobApplication.class)))
+          .thenReturn(application);
 
       JobApplicationResponse result = service.updateApplication(userId, applicationId, request);
 
@@ -336,7 +338,8 @@ class JobApplicationServiceTest {
               "New description");
 
       when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-      when(jobApplicationRepository.save(any(JobApplication.class))).thenReturn(application);
+      when(jobApplicationRepository.saveAndFlush(any(JobApplication.class)))
+          .thenReturn(application);
 
       JobApplicationResponse result = service.updateApplication(userId, applicationId, request);
 
