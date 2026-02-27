@@ -104,7 +104,7 @@ public class JobApplicationService {
       application.setDescription(request.description());
     }
 
-    JobApplication saved = jobApplicationRepository.save(application);
+    JobApplication saved = jobApplicationRepository.saveAndFlush(application);
     return JobApplicationResponse.from(saved);
   }
 
