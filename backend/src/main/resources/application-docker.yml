@@ -22,7 +22,7 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    expiration: ${JWT_EXPIRATION:PT24H}
+    expiration: ${JWT_EXPIRATION:PT5M}
     issuer: ${JWT_ISSUER:job-tracker}
   refresh:
     ttl: ${REFRESH_TOKEN_TTL:P7D}
