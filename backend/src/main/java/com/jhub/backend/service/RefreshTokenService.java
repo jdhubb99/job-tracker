@@ -45,7 +45,7 @@ public class RefreshTokenService {
     return persistedToken.rawToken();
   }
 
-  @Transactional
+  @Transactional(noRollbackFor = UnauthorizedException.class)
   public RefreshRotationResult rotate(String rawToken) {
     if (rawToken == null || rawToken.isBlank()) {
       throw new UnauthorizedException("Refresh token is required");
