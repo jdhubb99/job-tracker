@@ -54,7 +54,7 @@ public class RefreshTokenService {
     String tokenHash = hashToken(rawToken);
     RefreshToken existingToken =
         refreshTokenRepository
-            .findByTokenHash(tokenHash)
+            .findByTokenHashForUpdate(tokenHash)
             .orElseThrow(() -> new UnauthorizedException("Invalid refresh token"));
 
     User user = existingToken.getUser();

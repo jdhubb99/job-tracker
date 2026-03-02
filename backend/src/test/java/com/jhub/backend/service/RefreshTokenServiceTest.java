@@ -85,7 +85,8 @@ class RefreshTokenServiceTest {
             .revoked(false)
             .build();
 
-    when(refreshTokenRepository.findByTokenHash(tokenHash)).thenReturn(Optional.of(existing));
+    when(refreshTokenRepository.findByTokenHashForUpdate(tokenHash))
+        .thenReturn(Optional.of(existing));
 
     RefreshTokenService.RefreshRotationResult result = refreshTokenService.rotate(rawToken);
 
@@ -106,7 +107,8 @@ class RefreshTokenServiceTest {
   @Test
   void rotateThrowsForUnknownToken() {
     String rawToken = "unknown-token";
-    when(refreshTokenRepository.findByTokenHash(hash(rawToken))).thenReturn(Optional.empty());
+    when(refreshTokenRepository.findByTokenHashForUpdate(hash(rawToken)))
+        .thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> refreshTokenService.rotate(rawToken))
         .isInstanceOf(UnauthorizedException.class)
