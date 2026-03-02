@@ -28,7 +28,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableConfigurationProperties({JwtProperties.class, CorsProperties.class})
+@EnableConfigurationProperties({
+  JwtProperties.class,
+  CorsProperties.class,
+  RefreshTokenProperties.class
+})
 public class SecurityConfig {
 
   @Bean
@@ -48,7 +52,11 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
-                    .requestMatchers("/api/auth/**", "/api/health/**")
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/refresh")
+                    .permitAll()
+                    .requestMatchers("/api/health/**")
                     .permitAll()
                     .requestMatchers("/actuator/health", "/actuator/info")
                     .permitAll()

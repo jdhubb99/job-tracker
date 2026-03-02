@@ -6,11 +6,13 @@ import com.jhub.backend.dto.UserLoginRequest;
 import com.jhub.backend.dto.UserRegistrationRequest;
 import com.jhub.backend.dto.UserResponse;
 import com.jhub.backend.exception.EmailAlreadyExistsException;
+import com.jhub.backend.exception.ResourceNotFoundException;
 import com.jhub.backend.exception.UnauthorizedException;
 import com.jhub.backend.model.User;
 import com.jhub.backend.repository.UserRepository;
 import java.time.Instant;
 import java.util.Locale;
+import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -71,6 +73,18 @@ public class AuthService {
     }
 
     return createTokenResponse(user);
+  }
+
+  public AuthTokenResponse issueAccessToken(User user) {
+    return createTokenResponse(user);
+  }
+
+  public UserResponse getCurrentUser(UUID userId) {
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+    return UserResponse.from(user);
   }
 
   private AuthTokenResponse createTokenResponse(User user) {
