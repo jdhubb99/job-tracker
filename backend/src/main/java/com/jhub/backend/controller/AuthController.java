@@ -5,6 +5,7 @@ import com.jhub.backend.dto.AuthTokenResponse;
 import com.jhub.backend.dto.UserLoginRequest;
 import com.jhub.backend.dto.UserRegistrationRequest;
 import com.jhub.backend.dto.UserResponse;
+import com.jhub.backend.security.JwtSubjectParser;
 import com.jhub.backend.service.AuthService;
 import com.jhub.backend.service.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
@@ -73,7 +74,7 @@ public class AuthController {
   @PostMapping("/logout")
   public ResponseEntity<Void> logout(
       @AuthenticationPrincipal Jwt jwt, HttpServletResponse servletResponse) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     refreshTokenService.revokeAllForUser(userId);
     clearRefreshCookie(servletResponse);
     return ResponseEntity.ok().build();
@@ -81,7 +82,7 @@ public class AuthController {
 
   @GetMapping("/me")
   public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Jwt jwt) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     UserResponse response = authService.getCurrentUser(userId);
     return ResponseEntity.ok(response);
   }
