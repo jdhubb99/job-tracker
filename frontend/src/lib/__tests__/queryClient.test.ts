@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createAppQueryClient } from '../queryClient';
+import { ApiError } from '@/lib/api';
 
 vi.mock('sonner', () => ({
   toast: {
@@ -14,24 +15,24 @@ describe('createAppQueryClient', () => {
     expect(defaults.queries?.staleTime).toBe(5 * 60 * 1000);
   });
 
-  it('returns false for 401 responses', () => {
+  it('returns false for 401 ApiError', () => {
     const client = createAppQueryClient();
     const retry = client.getDefaultOptions().queries?.retry as (
       failureCount: number,
       error: unknown
     ) => boolean;
-    const response = new Response(null, { status: 401 });
-    expect(retry(0, response)).toBe(false);
+    const error = new ApiError(401, null);
+    expect(retry(0, error)).toBe(false);
   });
 
-  it('returns false for 403 responses', () => {
+  it('returns false for 403 ApiError', () => {
     const client = createAppQueryClient();
     const retry = client.getDefaultOptions().queries?.retry as (
       failureCount: number,
       error: unknown
     ) => boolean;
-    const response = new Response(null, { status: 403 });
-    expect(retry(0, response)).toBe(false);
+    const error = new ApiError(403, null);
+    expect(retry(0, error)).toBe(false);
   });
 
   it('allows up to 2 retries for other errors', () => {
