@@ -39,6 +39,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
       "app.jwt.secret=test-secret-key-that-is-at-least-32-bytes-long",
       "app.jwt.expiration=PT24H",
       "app.jwt.issuer=job-tracker-test",
+      "app.refresh.ttl=P7D",
+      "app.refresh.cookie-name=refresh_token",
+      "app.refresh.cookie-path=/api/auth",
+      "app.refresh.cookie-secure=false",
+      "app.refresh.cookie-same-site=Lax",
       "app.cors.allowed-origins=http://localhost:5173"
     })
 class SecurityConfigIntegrationTest {
