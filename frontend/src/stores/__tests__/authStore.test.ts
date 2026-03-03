@@ -13,13 +13,19 @@ describe('authStore', () => {
   });
 
   it('setUser sets the user', () => {
-    const user = { id: 1, email: 'test@example.com', name: 'Test User' };
+    const user = {
+      id: '11234567-89ab-cdef-0123-456789abcdef',
+      email: 'test@example.com',
+      name: 'Test User',
+    };
     useAuthStore.getState().setUser(user);
     expect(useAuthStore.getState().user).toEqual(user);
   });
 
   it('clearUser resets user to null', () => {
-    useAuthStore.getState().setUser({ id: 1, email: 'a@b.com', name: 'A' });
+    useAuthStore
+      .getState()
+      .setUser({ id: '11234567-89ab-cdef-0123-456789abcdef', email: 'a@b.com', name: 'A' });
     useAuthStore.getState().clearUser();
     expect(useAuthStore.getState().user).toBeNull();
   });
