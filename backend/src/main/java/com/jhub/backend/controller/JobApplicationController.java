@@ -4,6 +4,7 @@ import com.jhub.backend.dto.JobApplicationCreateRequest;
 import com.jhub.backend.dto.JobApplicationResponse;
 import com.jhub.backend.dto.JobApplicationUpdateRequest;
 import com.jhub.backend.model.enums.JobApplicationStatus;
+import com.jhub.backend.security.JwtSubjectParser;
 import com.jhub.backend.service.JobApplicationService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,7 +28,7 @@ public class JobApplicationController {
   @PostMapping
   public ResponseEntity<JobApplicationResponse> create(
       @AuthenticationPrincipal Jwt jwt, @Valid @RequestBody JobApplicationCreateRequest request) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     JobApplicationResponse response = jobApplicationService.createApplication(userId, request);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
@@ -36,7 +37,7 @@ public class JobApplicationController {
   public ResponseEntity<List<JobApplicationResponse>> getAll(
       @AuthenticationPrincipal Jwt jwt,
       @RequestParam(required = false) JobApplicationStatus status) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     List<JobApplicationResponse> responses =
         status != null
             ? jobApplicationService.getApplicationsByStatus(userId, status)
@@ -47,7 +48,7 @@ public class JobApplicationController {
   @GetMapping("/{id}")
   public ResponseEntity<JobApplicationResponse> getById(
       @AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     JobApplicationResponse response = jobApplicationService.getApplicationById(userId, id);
     return ResponseEntity.ok(response);
   }
@@ -57,14 +58,14 @@ public class JobApplicationController {
       @AuthenticationPrincipal Jwt jwt,
       @PathVariable UUID id,
       @Valid @RequestBody JobApplicationUpdateRequest request) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     JobApplicationResponse response = jobApplicationService.updateApplication(userId, id, request);
     return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
-    UUID userId = UUID.fromString(jwt.getSubject());
+    UUID userId = JwtSubjectParser.parseUserId(jwt);
     jobApplicationService.deleteApplication(userId, id);
     return ResponseEntity.noContent().build();
   }

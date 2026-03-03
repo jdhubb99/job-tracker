@@ -1,0 +1,6 @@
+services:
+  app:
+    environment:
+      JAVA_OPTS: "-Xmx512m -Xms256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+    ports:
+      - "5005:5005"
