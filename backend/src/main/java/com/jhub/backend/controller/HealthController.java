@@ -1,7 +1,6 @@
 package com.jhub.backend.controller;
 
 import com.jhub.backend.dto.HealthResponse;
-import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +18,7 @@ public class HealthController {
    */
   @GetMapping
   public ResponseEntity<HealthResponse> healthCheck() {
-    HealthResponse response =
-        new HealthResponse("UP", "Job Tracker Backend is running", LocalDateTime.now());
-
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(HealthResponse.up("Job Tracker Backend is running"));
   }
 
   /**
