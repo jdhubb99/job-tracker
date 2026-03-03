@@ -1,23 +1,18 @@
 import { create } from 'zustand';
+import type { User } from '@/lib/types';
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+export type { User };
 
 interface AuthState {
   user: User | null;
-  isLoading: boolean;
-  setUser: (user: User) => void;
-  clearUser: () => void;
-  setLoading: (isLoading: boolean) => void;
+  accessToken: string | null;
+  setAuth: (user: User, accessToken: string) => void;
+  clearAuth: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  isLoading: false,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
-  setLoading: (isLoading) => set({ isLoading }),
+  accessToken: null,
+  setAuth: (user, accessToken) => set({ user, accessToken }),
+  clearAuth: () => set({ user: null, accessToken: null }),
 }));
