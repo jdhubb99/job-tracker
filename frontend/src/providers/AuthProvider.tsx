@@ -10,13 +10,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { isLoading } = useQuery({
     queryKey: ['auth', 'refresh'],
     queryFn: async () => {
-      const data = await authApi.refresh();
-      if (data) {
-        setAuth(data.user, data.accessToken);
-      } else {
+      try {
+        const data = await authApi.refresh();
+        if (data) {
+          setAuth(data.user, data.accessToken);
+        } else {
+          clearAuth();
+        }
+        return data;
+      } catch (error) {
         clearAuth();
+        throw error;
       }
-      return data;
     },
     retry: false,
     staleTime: Infinity,
