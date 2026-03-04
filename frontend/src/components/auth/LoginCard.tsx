@@ -93,7 +93,9 @@ export function LoginCard() {
               aria-required="true"
               aria-invalid={!!errors.email || !!serverError || undefined}
               aria-describedby={
-                errors.email ? emailErrorId : serverError ? serverErrorId : undefined
+                [errors.email && emailErrorId, serverError && serverErrorId]
+                  .filter(Boolean)
+                  .join(' ') || undefined
               }
             />
             {errors.email && (
@@ -112,7 +114,11 @@ export function LoginCard() {
               autoComplete="current-password"
               aria-required="true"
               aria-invalid={!!errors.password || !!serverError || undefined}
-              aria-describedby={errors.password ? passwordErrorId : undefined}
+              aria-describedby={
+                [errors.password && passwordErrorId, serverError && serverErrorId]
+                  .filter(Boolean)
+                  .join(' ') || undefined
+              }
             />
             {errors.password && (
               <p id={passwordErrorId} className="text-destructive text-sm">
