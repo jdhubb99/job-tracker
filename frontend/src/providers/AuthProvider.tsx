@@ -38,7 +38,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div
+        className="flex h-screen items-center justify-center"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
         <div className="text-muted-foreground text-sm">Loading...</div>
       </div>
     );
