@@ -48,8 +48,8 @@ export function LoginCard() {
   }
 
   return (
-    <Card className="w-full max-w-sm" role="region" aria-labelledby={headingId}>
-      <CardHeader>
+    <Card className="w-full max-w-sm gap-3 px-2 py-8" role="region" aria-labelledby={headingId}>
+      <CardHeader className="text-center">
         <CardTitle id={headingId} className="text-2xl">
           Job Tracker
         </CardTitle>
@@ -63,7 +63,7 @@ export function LoginCard() {
         aria-labelledby={headingId}
         noValidate
       >
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-5">
           <div aria-live="assertive" aria-atomic="true">
             {error && (
               <div id={errorId} role="alert" className="text-destructive text-sm">
@@ -101,7 +101,7 @@ export function LoginCard() {
             />
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="pt-4">
           <Button
             type="submit"
             className="w-full"
