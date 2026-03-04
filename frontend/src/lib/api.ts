@@ -66,6 +66,10 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
       });
 
       if (!retryResponse.ok) {
+        if (retryResponse.status === 401) {
+          useAuthStore.getState().clearAuth();
+          window.dispatchEvent(new CustomEvent('auth:logout'));
+        }
         throw new ApiError(retryResponse.status, await parseErrorBody(retryResponse));
       }
 
