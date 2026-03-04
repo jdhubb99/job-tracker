@@ -74,7 +74,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
     }
 
     useAuthStore.getState().clearAuth();
-    window.location.href = '/login';
+    window.dispatchEvent(new CustomEvent('auth:logout'));
     throw new ApiError(401, null);
   }
 

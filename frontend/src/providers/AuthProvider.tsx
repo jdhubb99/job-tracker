@@ -1,11 +1,19 @@
-import { type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
 import { useAuthStore } from '@/stores/authStore';
 import { authApi } from '@/lib/api';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const setAuth = useAuthStore((s) => s.setAuth);
   const clearAuth = useAuthStore((s) => s.clearAuth);
+  const router = useRouter();
+
+  useEffect(() => {
+    const handler = () => router.navigate({ to: '/login' as string });
+    window.addEventListener('auth:logout', handler);
+    return () => window.removeEventListener('auth:logout', handler);
+  }, [router]);
 
   const { isLoading } = useQuery({
     queryKey: ['auth', 'refresh'],

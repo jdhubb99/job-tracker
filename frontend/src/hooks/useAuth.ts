@@ -22,7 +22,7 @@ export function useAuth() {
     mutationFn: () => authApi.logout(),
     onSettled: () => {
       clearAuth();
-      window.location.href = '/login';
+      window.dispatchEvent(new CustomEvent('auth:logout'));
     },
   });
 

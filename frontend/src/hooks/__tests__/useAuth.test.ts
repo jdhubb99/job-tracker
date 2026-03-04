@@ -45,23 +45,16 @@ function createWrapper() {
 }
 
 describe('useAuth', () => {
-  let originalLocation: Location;
+  let dispatchSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
     useAuthStore.setState({ user: null, accessToken: null });
-    originalLocation = window.location;
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: { ...originalLocation, href: '' },
-    });
+    dispatchSpy = vi.spyOn(window, 'dispatchEvent');
   });
 
   afterEach(() => {
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: originalLocation,
-    });
+    dispatchSpy.mockRestore();
   });
 
   it('returns isAuthenticated false when no user', () => {
@@ -114,7 +107,7 @@ describe('useAuth', () => {
     expect(useAuthStore.getState().user).toEqual(mockUser);
   });
 
-  it('logoutMutation clears auth and redirects to /login', async () => {
+  it('logoutMutation clears auth and dispatches auth:logout', async () => {
     useAuthStore.setState({ user: mockUser, accessToken: 'token' });
     mockedAuthApi.logout.mockResolvedValueOnce(undefined);
     const { result } = renderHook(() => useAuth(), { wrapper: createWrapper() });
@@ -127,7 +120,8 @@ describe('useAuth', () => {
 
     expect(useAuthStore.getState().user).toBeNull();
     expect(useAuthStore.getState().accessToken).toBeNull();
-    expect(window.location.href).toBe('/login');
+    expect(dispatchSpy).toHaveBeenCalledWith(expect.any(CustomEvent));
+    expect(dispatchSpy.mock.calls[0][0]).toHaveProperty('type', 'auth:logout');
   });
 
   it('logoutMutation clears auth even if API call fails', async () => {
@@ -142,6 +136,7 @@ describe('useAuth', () => {
     await waitFor(() => expect(result.current.logoutMutation.isError).toBe(true));
 
     expect(useAuthStore.getState().user).toBeNull();
-    expect(window.location.href).toBe('/login');
+    expect(dispatchSpy).toHaveBeenCalledWith(expect.any(CustomEvent));
+    expect(dispatchSpy.mock.calls[0][0]).toHaveProperty('type', 'auth:logout');
   });
 });
