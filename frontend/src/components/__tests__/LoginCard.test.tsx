@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createElement, type ReactNode } from 'react';
 import { useAuthStore } from '@/stores/authStore';
@@ -177,7 +178,7 @@ describe('LoginCard', () => {
     });
   });
 
-  it('sets aria-invalid on inputs when error occurs', async () => {
+  it('sets aria-invalid on inputs when server error occurs', async () => {
     mockedLogin.mockRejectedValueOnce(
       new ApiError(401, {
         timestamp: '2026-01-01T00:00:00Z',
@@ -200,7 +201,7 @@ describe('LoginCard', () => {
     });
   });
 
-  it('focuses email input on error for accessibility', async () => {
+  it('focuses email input on server error for accessibility', async () => {
     mockedLogin.mockRejectedValueOnce(
       new ApiError(401, {
         timestamp: '2026-01-01T00:00:00Z',
@@ -231,5 +232,83 @@ describe('LoginCard', () => {
     const form = region.querySelector('form');
     expect(form).toHaveAttribute('aria-labelledby');
     expect(form).toHaveAttribute('aria-describedby');
+  });
+
+  describe('client-side validation', () => {
+    it('shows required error when email is empty', async () => {
+      const user = userEvent.setup();
+      render(<LoginCard />, { wrapper: createWrapper() });
+
+      await user.type(screen.getByLabelText('Password'), 'password123');
+      await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Email is required')).toBeInTheDocument();
+      });
+      expect(mockedLogin).not.toHaveBeenCalled();
+    });
+
+    it('shows required error when password is empty', async () => {
+      const user = userEvent.setup();
+      render(<LoginCard />, { wrapper: createWrapper() });
+
+      await user.type(screen.getByLabelText('Email'), 'test@example.com');
+      await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Password is required')).toBeInTheDocument();
+      });
+      expect(mockedLogin).not.toHaveBeenCalled();
+    });
+
+    it('shows invalid email error for malformed email', async () => {
+      const user = userEvent.setup();
+      render(<LoginCard />, { wrapper: createWrapper() });
+
+      await user.type(screen.getByLabelText('Email'), 'not-an-email');
+      await user.type(screen.getByLabelText('Password'), 'password123');
+      await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
+      });
+      expect(mockedLogin).not.toHaveBeenCalled();
+    });
+
+    it('shows both errors when both fields are empty', async () => {
+      const user = userEvent.setup();
+      render(<LoginCard />, { wrapper: createWrapper() });
+
+      await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Email is required')).toBeInTheDocument();
+        expect(screen.getByText('Password is required')).toBeInTheDocument();
+      });
+      expect(mockedLogin).not.toHaveBeenCalled();
+    });
+
+    it('focuses first invalid field on validation error', async () => {
+      const user = userEvent.setup();
+      render(<LoginCard />, { wrapper: createWrapper() });
+
+      await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+      await waitFor(() => {
+        expect(screen.getByLabelText('Email')).toHaveFocus();
+      });
+    });
+
+    it('sets aria-invalid on fields with validation errors', async () => {
+      const user = userEvent.setup();
+      render(<LoginCard />, { wrapper: createWrapper() });
+
+      await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+      await waitFor(() => {
+        expect(screen.getByLabelText('Email')).toHaveAttribute('aria-invalid', 'true');
+        expect(screen.getByLabelText('Password')).toHaveAttribute('aria-invalid', 'true');
+      });
+    });
   });
 });

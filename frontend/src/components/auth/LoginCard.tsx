@@ -1,7 +1,10 @@
-import { useId, useRef, useState } from 'react';
+import { useId } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { ApiError } from '@/lib/api';
+import { loginSchema, type LoginFormData } from '@/lib/schemas/auth';
 import {
   Card,
   CardHeader,
@@ -21,31 +24,38 @@ export function LoginCard() {
   const id = useId();
   const emailId = `${id}-email`;
   const passwordId = `${id}-password`;
-  const errorId = `${id}-error`;
+  const emailErrorId = `${id}-email-error`;
+  const passwordErrorId = `${id}-password-error`;
+  const serverErrorId = `${id}-error`;
   const headingId = `${id}-heading`;
   const descriptionId = `${id}-description`;
 
-  const emailRef = useRef<HTMLInputElement>(null);
+  const {
+    register,
+    handleSubmit,
+    setFocus,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const error = loginMutation.error
+  const serverError = loginMutation.error
     ? loginMutation.error instanceof ApiError
       ? loginMutation.error.message
       : 'An unexpected error occurred. Please try again.'
     : null;
 
-  function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
-    loginMutation.mutate(
-      { email, password },
-      {
-        onSuccess: () => navigate({ to: '/dashboard' }),
-        onError: () => emailRef.current?.focus(),
-      }
-    );
+  function onSubmit(data: LoginFormData) {
+    loginMutation.reset();
+    loginMutation.mutate(data, {
+      onSuccess: () => navigate({ to: '/dashboard' }),
+      onError: () => setFocus('email'),
+    });
   }
+
+  const emailRegistration = register('email');
+  const passwordRegistration = register('password');
 
   return (
     <Card className="w-full max-w-sm gap-3 px-2 py-8" role="region" aria-labelledby={headingId}>
@@ -58,47 +68,57 @@ export function LoginCard() {
         </CardDescription>
       </CardHeader>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         aria-describedby={descriptionId}
         aria-labelledby={headingId}
         noValidate
       >
         <CardContent className="flex flex-col gap-5">
           <div aria-live="assertive" aria-atomic="true">
-            {error && (
-              <div id={errorId} role="alert" className="text-destructive text-sm">
-                {error}
+            {serverError && (
+              <div id={serverErrorId} role="alert" className="text-destructive text-sm">
+                {serverError}
               </div>
             )}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor={emailId}>Email</Label>
             <Input
-              ref={emailRef}
+              {...emailRegistration}
               id={emailId}
               type="email"
               placeholder="you@example.com"
               required
               autoComplete="email"
               aria-required="true"
-              aria-invalid={error ? true : undefined}
-              aria-describedby={error ? errorId : undefined}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={!!errors.email || !!serverError || undefined}
+              aria-describedby={
+                errors.email ? emailErrorId : serverError ? serverErrorId : undefined
+              }
             />
+            {errors.email && (
+              <p id={emailErrorId} className="text-destructive text-sm">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor={passwordId}>Password</Label>
             <Input
+              {...passwordRegistration}
               id={passwordId}
               type="password"
               required
               autoComplete="current-password"
               aria-required="true"
-              aria-invalid={error ? true : undefined}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              aria-invalid={!!errors.password || !!serverError || undefined}
+              aria-describedby={errors.password ? passwordErrorId : undefined}
             />
+            {errors.password && (
+              <p id={passwordErrorId} className="text-destructive text-sm">
+                {errors.password.message}
+              </p>
+            )}
           </div>
         </CardContent>
         <CardFooter className="pt-4">
