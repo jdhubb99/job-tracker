@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login';
 import { Route as AuthRouteImport } from './routes/_auth';
 import { Route as SplatRouteImport } from './routes/$';
 import { Route as IndexRouteImport } from './routes/index';
+import { Route as AuthJobsRouteImport } from './routes/_auth/jobs';
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard';
 
 const LoginRoute = LoginRouteImport.update({
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any);
+const AuthJobsRoute = AuthJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AuthRoute,
+} as any);
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute;
   '/login': typeof LoginRoute;
   '/dashboard': typeof AuthDashboardRoute;
+  '/jobs': typeof AuthJobsRoute;
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute;
   '/$': typeof SplatRoute;
   '/login': typeof LoginRoute;
   '/dashboard': typeof AuthDashboardRoute;
+  '/jobs': typeof AuthJobsRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -59,13 +67,14 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren;
   '/login': typeof LoginRoute;
   '/_auth/dashboard': typeof AuthDashboardRoute;
+  '/_auth/jobs': typeof AuthJobsRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/$' | '/login' | '/dashboard';
+  fullPaths: '/' | '/$' | '/login' | '/dashboard' | '/jobs';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/$' | '/login' | '/dashboard';
-  id: '__root__' | '/' | '/$' | '/_auth' | '/login' | '/_auth/dashboard';
+  to: '/' | '/$' | '/login' | '/dashboard' | '/jobs';
+  id: '__root__' | '/' | '/$' | '/_auth' | '/login' | '/_auth/dashboard' | '/_auth/jobs';
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -105,6 +114,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    '/_auth/jobs': {
+      id: '/_auth/jobs';
+      path: '/jobs';
+      fullPath: '/jobs';
+      preLoaderRoute: typeof AuthJobsRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
     '/_auth/dashboard': {
       id: '/_auth/dashboard';
       path: '/dashboard';
@@ -117,10 +133,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthDashboardRoute: typeof AuthDashboardRoute;
+  AuthJobsRoute: typeof AuthJobsRoute;
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthDashboardRoute: AuthDashboardRoute,
+  AuthJobsRoute: AuthJobsRoute,
 };
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
