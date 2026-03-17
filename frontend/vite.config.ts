@@ -6,7 +6,10 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
-    tanstackRouter({ routesDirectory: './src/routes' }),
+    tanstackRouter({
+      routesDirectory: './src/routes',
+      routeFileIgnorePattern: '__tests__',
+    }),
     react(),
     tailwindcss(),
     tsconfigPaths(),
