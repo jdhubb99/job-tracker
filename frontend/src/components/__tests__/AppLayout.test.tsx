@@ -83,9 +83,6 @@ describe('AppLayout', () => {
   it('opens mobile nav when hamburger is clicked', () => {
     render(<AppLayout />, { wrapper: createWrapper() });
     fireEvent.click(screen.getByRole('button', { name: 'Open navigation menu' }));
-    // MobileNav should render nav links in the sheet
-    const navLinks = screen.getAllByText('Dashboard');
-    // One in sidebar, one in mobile nav
-    expect(navLinks.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 });
