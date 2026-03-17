@@ -1,6 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { LayoutDashboard, Briefcase } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const navItems = [
@@ -15,10 +15,14 @@ interface MobileNavProps {
 
 export function MobileNav({ open, onOpenChange }: MobileNavProps) {
   const routerState = useRouterState();
+  const prevPathname = useRef(routerState.location.pathname);
 
-  // Close on route change
+  // Close on route change (skip initial mount)
   useEffect(() => {
-    onOpenChange(false);
+    if (routerState.location.pathname !== prevPathname.current) {
+      prevPathname.current = routerState.location.pathname;
+      onOpenChange(false);
+    }
   }, [routerState.location.pathname, onOpenChange]);
 
   return (

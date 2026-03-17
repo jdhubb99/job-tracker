@@ -39,12 +39,19 @@ describe('MobileNav', () => {
     expect(screen.getByText('Jobs').closest('a')).toHaveAttribute('href', '/jobs');
   });
 
+  it('does not call onOpenChange on initial mount', () => {
+    render(<MobileNav open={true} onOpenChange={mockOnOpenChange} />);
+    expect(mockOnOpenChange).not.toHaveBeenCalled();
+  });
+
   it('calls onOpenChange(false) on route change', () => {
     const { rerender } = render(<MobileNav open={true} onOpenChange={mockOnOpenChange} />);
+    mockOnOpenChange.mockClear();
 
     mockPathname = '/jobs';
     rerender(<MobileNav open={true} onOpenChange={mockOnOpenChange} />);
 
+    expect(mockOnOpenChange).toHaveBeenCalledTimes(1);
     expect(mockOnOpenChange).toHaveBeenCalledWith(false);
   });
 });
