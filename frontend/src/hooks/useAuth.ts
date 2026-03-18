@@ -20,6 +20,7 @@ export function useAuth() {
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logout(),
+    onError: () => {},
     onSettled: () => {
       clearAuth();
       window.dispatchEvent(new CustomEvent('auth:logout'));

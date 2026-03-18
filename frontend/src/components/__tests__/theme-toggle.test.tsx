@@ -3,11 +3,11 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { ThemeToggle } from '../theme-toggle';
 
 const setThemeMock = vi.fn();
-let currentTheme = 'system';
+let currentResolvedTheme = 'light';
 
 vi.mock('next-themes', () => ({
   useTheme: () => ({
-    theme: currentTheme,
+    resolvedTheme: currentResolvedTheme,
     setTheme: setThemeMock,
   }),
 }));
@@ -15,7 +15,7 @@ vi.mock('next-themes', () => ({
 describe('ThemeToggle', () => {
   beforeEach(() => {
     cleanup();
-    currentTheme = 'system';
+    currentResolvedTheme = 'light';
     setThemeMock.mockClear();
   });
 
@@ -24,30 +24,29 @@ describe('ThemeToggle', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('cycles from system to light', () => {
-    currentTheme = 'system';
-    render(<ThemeToggle />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(setThemeMock).toHaveBeenCalledWith('light');
-  });
-
-  it('cycles from light to dark', () => {
-    currentTheme = 'light';
+  it('switches from light to dark', () => {
+    currentResolvedTheme = 'light';
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole('button'));
     expect(setThemeMock).toHaveBeenCalledWith('dark');
   });
 
-  it('cycles from dark to system', () => {
-    currentTheme = 'dark';
+  it('switches from dark to light', () => {
+    currentResolvedTheme = 'dark';
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole('button'));
-    expect(setThemeMock).toHaveBeenCalledWith('system');
+    expect(setThemeMock).toHaveBeenCalledWith('light');
   });
 
   it('shows correct aria-label for next theme', () => {
-    currentTheme = 'light';
+    currentResolvedTheme = 'light';
     render(<ThemeToggle />);
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Switch to dark theme');
+  });
+
+  it('shows correct title for next theme', () => {
+    currentResolvedTheme = 'dark';
+    render(<ThemeToggle />);
+    expect(screen.getByRole('button')).toHaveAttribute('title', 'Switch to light theme');
   });
 });
