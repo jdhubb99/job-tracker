@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root';
+import { Route as RegisterRouteImport } from './routes/register';
 import { Route as LoginRouteImport } from './routes/login';
 import { Route as AuthRouteImport } from './routes/_auth';
 import { Route as SplatRouteImport } from './routes/$';
@@ -16,6 +17,11 @@ import { Route as IndexRouteImport } from './routes/index';
 import { Route as AuthJobsRouteImport } from './routes/_auth/jobs';
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard';
 
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any);
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute;
   '/$': typeof SplatRoute;
   '/login': typeof LoginRoute;
+  '/register': typeof RegisterRoute;
   '/dashboard': typeof AuthDashboardRoute;
   '/jobs': typeof AuthJobsRoute;
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute;
   '/$': typeof SplatRoute;
   '/login': typeof LoginRoute;
+  '/register': typeof RegisterRoute;
   '/dashboard': typeof AuthDashboardRoute;
   '/jobs': typeof AuthJobsRoute;
 }
@@ -66,15 +74,24 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute;
   '/_auth': typeof AuthRouteWithChildren;
   '/login': typeof LoginRoute;
+  '/register': typeof RegisterRoute;
   '/_auth/dashboard': typeof AuthDashboardRoute;
   '/_auth/jobs': typeof AuthJobsRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/$' | '/login' | '/dashboard' | '/jobs';
+  fullPaths: '/' | '/$' | '/login' | '/register' | '/dashboard' | '/jobs';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/$' | '/login' | '/dashboard' | '/jobs';
-  id: '__root__' | '/' | '/$' | '/_auth' | '/login' | '/_auth/dashboard' | '/_auth/jobs';
+  to: '/' | '/$' | '/login' | '/register' | '/dashboard' | '/jobs';
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/_auth'
+    | '/login'
+    | '/register'
+    | '/_auth/dashboard'
+    | '/_auth/jobs';
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -82,10 +99,18 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute;
   AuthRoute: typeof AuthRouteWithChildren;
   LoginRoute: typeof LoginRoute;
+  RegisterRoute: typeof RegisterRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/register': {
+      id: '/register';
+      path: '/register';
+      fullPath: '/register';
+      preLoaderRoute: typeof RegisterRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/login': {
       id: '/login';
       path: '/login';
@@ -148,6 +173,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

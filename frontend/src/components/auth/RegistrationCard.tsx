@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@/hooks/useAuth';
 import { ApiError } from '@/lib/api';
-import { loginSchema, type LoginFormData } from '@/lib/schemas/auth';
+import { registerSchema, type RegisterFormData } from '@/lib/schemas/auth';
 import {
   Card,
   CardHeader,
@@ -17,13 +17,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-export function LoginCard() {
+export function RegistrationCard() {
   const navigate = useNavigate();
-  const { loginMutation } = useAuth();
+  const { registerMutation } = useAuth();
 
   const id = useId();
+  const firstNameId = `${id}-firstName`;
+  const lastNameId = `${id}-lastName`;
   const emailId = `${id}-email`;
   const passwordId = `${id}-password`;
+  const firstNameErrorId = `${id}-firstName-error`;
+  const lastNameErrorId = `${id}-lastName-error`;
   const emailErrorId = `${id}-email-error`;
   const passwordErrorId = `${id}-password-error`;
   const serverErrorId = `${id}-error`;
@@ -33,27 +37,39 @@ export function LoginCard() {
   const {
     register,
     handleSubmit,
+    setError,
     setFocus,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { firstName: '', lastName: '', email: '', password: '' },
   });
 
-  const serverError = loginMutation.error
-    ? loginMutation.error instanceof ApiError
-      ? loginMutation.error.message
+  const serverError = registerMutation.error
+    ? registerMutation.error instanceof ApiError
+      ? registerMutation.error.message
       : 'An unexpected error occurred. Please try again.'
     : null;
 
-  function onSubmit(data: LoginFormData) {
-    loginMutation.reset();
-    loginMutation.mutate(data, {
+  function onSubmit(data: RegisterFormData) {
+    registerMutation.reset();
+    registerMutation.mutate(data, {
       onSuccess: () => navigate({ to: '/dashboard' }),
-      onError: () => setFocus('email'),
+      onError: (error) => {
+        if (error instanceof ApiError && error.fieldErrors) {
+          for (const [field, message] of Object.entries(error.fieldErrors)) {
+            if (field in registerSchema.shape) {
+              setError(field as keyof RegisterFormData, { message });
+            }
+          }
+        }
+        setFocus('firstName');
+      },
     });
   }
 
+  const firstNameRegistration = register('firstName');
+  const lastNameRegistration = register('lastName');
   const emailRegistration = register('email');
   const passwordRegistration = register('password');
 
@@ -63,9 +79,7 @@ export function LoginCard() {
         <CardTitle id={headingId} className="text-2xl">
           Job Tracker
         </CardTitle>
-        <CardDescription id={descriptionId}>
-          Sign in to manage your job applications
-        </CardDescription>
+        <CardDescription id={descriptionId}>Create an account to get started</CardDescription>
       </CardHeader>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -79,6 +93,50 @@ export function LoginCard() {
               <div id={serverErrorId} role="alert" className="text-destructive text-sm">
                 {serverError}
               </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={firstNameId}>First Name</Label>
+            <Input
+              {...firstNameRegistration}
+              id={firstNameId}
+              type="text"
+              required
+              autoComplete="given-name"
+              aria-required="true"
+              aria-invalid={!!errors.firstName || !!serverError || undefined}
+              aria-describedby={
+                [errors.firstName && firstNameErrorId, serverError && serverErrorId]
+                  .filter(Boolean)
+                  .join(' ') || undefined
+              }
+            />
+            {errors.firstName && (
+              <p id={firstNameErrorId} className="text-destructive text-sm">
+                {errors.firstName.message}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={lastNameId}>Last Name</Label>
+            <Input
+              {...lastNameRegistration}
+              id={lastNameId}
+              type="text"
+              required
+              autoComplete="family-name"
+              aria-required="true"
+              aria-invalid={!!errors.lastName || !!serverError || undefined}
+              aria-describedby={
+                [errors.lastName && lastNameErrorId, serverError && serverErrorId]
+                  .filter(Boolean)
+                  .join(' ') || undefined
+              }
+            />
+            {errors.lastName && (
+              <p id={lastNameErrorId} className="text-destructive text-sm">
+                {errors.lastName.message}
+              </p>
             )}
           </div>
           <div className="flex flex-col gap-2">
@@ -111,7 +169,7 @@ export function LoginCard() {
               id={passwordId}
               type="password"
               required
-              autoComplete="current-password"
+              autoComplete="new-password"
               aria-required="true"
               aria-invalid={!!errors.password || !!serverError || undefined}
               aria-describedby={
@@ -131,15 +189,15 @@ export function LoginCard() {
           <Button
             type="submit"
             className="w-full"
-            disabled={loginMutation.isPending}
-            aria-busy={loginMutation.isPending}
+            disabled={registerMutation.isPending}
+            aria-busy={registerMutation.isPending}
           >
-            {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
+            {registerMutation.isPending ? 'Creating account...' : 'Create account'}
           </Button>
           <p className="text-muted-foreground text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link to="/register" className="text-primary underline-offset-4 hover:underline">
-              Sign up
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary underline-offset-4 hover:underline">
+              Sign in
             </Link>
           </p>
         </CardFooter>
