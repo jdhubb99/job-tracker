@@ -11,6 +11,8 @@ const mockNavigate = vi.fn();
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
+  Link: ({ children, to, ...props }: { children: ReactNode; to: string }) =>
+    createElement('a', { href: to, ...props }, children),
 }));
 
 vi.mock('@/lib/api', async (importOriginal) => {
