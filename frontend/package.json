@@ -41,7 +41,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^5",
+    "@vitejs/plugin-react": "^6",
     "eslint": "^10",
     "eslint-config-prettier": "^10",
     "eslint-plugin-react-hooks": "^7",
