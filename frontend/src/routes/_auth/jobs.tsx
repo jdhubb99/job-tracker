@@ -9,6 +9,7 @@ import { JobsEmptyState } from '@/components/jobs/JobsEmptyState';
 import { JobsLoadingSkeleton } from '@/components/jobs/JobsLoadingSkeleton';
 import { DeleteJobDialog } from '@/components/jobs/DeleteJobDialog';
 import { useJobApplications, useDeleteJobApplication } from '@/hooks/useJobApplications';
+import { JOB_APPLICATION_STATUSES } from '@/lib/types';
 import type { JobApplicationResponse, JobApplicationStatus } from '@/lib/types';
 
 interface JobsSearch {
@@ -18,7 +19,9 @@ interface JobsSearch {
 export const Route = createFileRoute('/_auth/jobs')({
   component: Jobs,
   validateSearch: (search: Record<string, unknown>): JobsSearch => ({
-    status: search.status as JobApplicationStatus | undefined,
+    status: JOB_APPLICATION_STATUSES.includes(search.status as JobApplicationStatus)
+      ? (search.status as JobApplicationStatus)
+      : undefined,
   }),
 });
 

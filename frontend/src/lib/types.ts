@@ -41,13 +41,16 @@ export interface RegisterRequest {
 }
 
 // Matches JobApplicationStatus.java enum
-export type JobApplicationStatus =
-  | 'APPLIED'
-  | 'INTERVIEWING'
-  | 'OFFER'
-  | 'REJECTED'
-  | 'WITHDRAWN'
-  | 'ACCEPTED';
+export const JOB_APPLICATION_STATUSES = [
+  'APPLIED',
+  'INTERVIEWING',
+  'OFFER',
+  'REJECTED',
+  'WITHDRAWN',
+  'ACCEPTED',
+] as const;
+
+export type JobApplicationStatus = (typeof JOB_APPLICATION_STATUSES)[number];
 
 // Matches JobApplicationResponse.java
 export interface JobApplicationResponse {
