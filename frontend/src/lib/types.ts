@@ -39,3 +39,29 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
 }
+
+// Matches JobApplicationStatus.java enum
+export type JobApplicationStatus =
+  | 'APPLIED'
+  | 'INTERVIEWING'
+  | 'OFFER'
+  | 'REJECTED'
+  | 'WITHDRAWN'
+  | 'ACCEPTED';
+
+// Matches JobApplicationResponse.java
+export interface JobApplicationResponse {
+  id: string;
+  userId: string;
+  company: string;
+  jobTitle: string;
+  status: JobApplicationStatus;
+  dateApplied: string;
+  jobPostingUrl: string | null;
+  location: string | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
