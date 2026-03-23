@@ -52,6 +52,32 @@ export const JOB_APPLICATION_STATUSES = [
 
 export type JobApplicationStatus = (typeof JOB_APPLICATION_STATUSES)[number];
 
+// Matches JobApplicationCreateRequest.java
+export interface JobApplicationCreateData {
+  company: string;
+  jobTitle: string;
+  dateApplied: string;
+  status?: JobApplicationStatus;
+  jobPostingUrl?: string | null;
+  location?: string | null;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  description?: string | null;
+}
+
+// Matches JobApplicationUpdateRequest.java
+export interface JobApplicationUpdateData {
+  company?: string;
+  jobTitle?: string;
+  dateApplied?: string;
+  status?: JobApplicationStatus;
+  jobPostingUrl?: string | null;
+  location?: string | null;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  description?: string | null;
+}
+
 // Matches JobApplicationResponse.java
 export interface JobApplicationResponse {
   id: string;
