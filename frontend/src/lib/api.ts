@@ -2,6 +2,8 @@ import { useAuthStore } from '@/stores/authStore';
 import type {
   AuthTokenResponse,
   ApiErrorBody,
+  JobApplicationResponse,
+  JobApplicationStatus,
   LoginRequest,
   RegisterRequest,
   User,
@@ -140,5 +142,20 @@ export const authApi = {
 
   me(): Promise<User> {
     return apiFetch<User>('/auth/me');
+  },
+};
+
+export const jobApplicationsApi = {
+  getAll(status?: JobApplicationStatus): Promise<JobApplicationResponse[]> {
+    const params = status ? `?status=${status}` : '';
+    return apiFetch<JobApplicationResponse[]>(`/job-applications${params}`);
+  },
+
+  getById(id: string): Promise<JobApplicationResponse> {
+    return apiFetch<JobApplicationResponse>(`/job-applications/${id}`);
+  },
+
+  delete(id: string): Promise<void> {
+    return apiFetch<void>(`/job-applications/${id}`, { method: 'DELETE' });
   },
 };

@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
@@ -12,7 +11,6 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
-    tsconfigPaths(),
   ],
   server: {
     port: 3000,
@@ -23,4 +21,5 @@ export default defineConfig({
       },
     },
   },
+  resolve: { tsconfigPaths: true },
 });

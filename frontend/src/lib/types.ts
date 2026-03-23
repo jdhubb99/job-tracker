@@ -39,3 +39,32 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
 }
+
+// Matches JobApplicationStatus.java enum
+export const JOB_APPLICATION_STATUSES = [
+  'APPLIED',
+  'INTERVIEWING',
+  'OFFER',
+  'REJECTED',
+  'WITHDRAWN',
+  'ACCEPTED',
+] as const;
+
+export type JobApplicationStatus = (typeof JOB_APPLICATION_STATUSES)[number];
+
+// Matches JobApplicationResponse.java
+export interface JobApplicationResponse {
+  id: string;
+  userId: string;
+  company: string;
+  jobTitle: string;
+  status: JobApplicationStatus;
+  dateApplied: string;
+  jobPostingUrl: string | null;
+  location: string | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
