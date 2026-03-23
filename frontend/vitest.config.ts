@@ -1,10 +1,10 @@
 import { defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [],
   test: {
     environment: 'happy-dom',
     setupFiles: ['./src/test/setup.ts'],
   },
+  resolve: { tsconfigPaths: true },
 });
