@@ -78,6 +78,7 @@ describe('JobsEmptyState', () => {
 });
 
 describe('JobsTable', () => {
+  const onEdit = vi.fn();
   const onDelete = vi.fn();
 
   beforeEach(() => {
@@ -86,7 +87,7 @@ describe('JobsTable', () => {
   });
 
   it('renders all job applications', () => {
-    render(<JobsTable jobs={mockJobs} onDelete={onDelete} />);
+    render(<JobsTable jobs={mockJobs} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText('Acme Corp')).toBeInTheDocument();
     expect(screen.getByText('Beta Inc')).toBeInTheDocument();
     expect(screen.getByText('Software Engineer')).toBeInTheDocument();
@@ -94,13 +95,13 @@ describe('JobsTable', () => {
   });
 
   it('renders status badges', () => {
-    render(<JobsTable jobs={mockJobs} onDelete={onDelete} />);
+    render(<JobsTable jobs={mockJobs} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getAllByText('Applied').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Interviewing').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders location or dash for missing location', () => {
-    render(<JobsTable jobs={mockJobs} onDelete={onDelete} />);
+    render(<JobsTable jobs={mockJobs} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText('Remote')).toBeInTheDocument();
     // Second job has null location, renders as "-"
     const dashes = screen.getAllByText('-');
@@ -109,7 +110,7 @@ describe('JobsTable', () => {
 
   it('calls onDelete when delete button is clicked', async () => {
     const user = userEvent.setup();
-    render(<JobsTable jobs={mockJobs} onDelete={onDelete} />);
+    render(<JobsTable jobs={mockJobs} onEdit={onEdit} onDelete={onDelete} />);
     // Default sort is dateApplied desc, so Beta Inc (Mar 10) is first
     const deleteButtons = screen.getAllByRole('button', { name: /delete/i });
     await user.click(deleteButtons[0]);
@@ -118,7 +119,7 @@ describe('JobsTable', () => {
 
   it('supports sorting by clicking column headers', async () => {
     const user = userEvent.setup();
-    render(<JobsTable jobs={mockJobs} onDelete={onDelete} />);
+    render(<JobsTable jobs={mockJobs} onEdit={onEdit} onDelete={onDelete} />);
     const companySort = screen.getByRole('button', { name: /sort by company/i });
     await user.click(companySort);
     // After sorting asc by company, Acme should be first
@@ -129,6 +130,7 @@ describe('JobsTable', () => {
 });
 
 describe('JobCard', () => {
+  const onEdit = vi.fn();
   const onDelete = vi.fn();
 
   beforeEach(() => {
@@ -137,7 +139,7 @@ describe('JobCard', () => {
   });
 
   it('renders job details', () => {
-    render(<JobCard job={mockJobs[0]} onDelete={onDelete} />);
+    render(<JobCard job={mockJobs[0]} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText('Acme Corp')).toBeInTheDocument();
     expect(screen.getByText('Software Engineer')).toBeInTheDocument();
     expect(screen.getByText('Applied')).toBeInTheDocument();
@@ -146,7 +148,7 @@ describe('JobCard', () => {
 
   it('calls onDelete when delete button is clicked', async () => {
     const user = userEvent.setup();
-    render(<JobCard job={mockJobs[0]} onDelete={onDelete} />);
+    render(<JobCard job={mockJobs[0]} onEdit={onEdit} onDelete={onDelete} />);
     await user.click(screen.getByRole('button', { name: /delete/i }));
     expect(onDelete).toHaveBeenCalledWith(mockJobs[0]);
   });
