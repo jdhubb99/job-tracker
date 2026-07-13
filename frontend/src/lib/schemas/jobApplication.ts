@@ -18,8 +18,16 @@ export const jobApplicationSchema = z
       .max(2048, 'URL must be 2048 characters or less')
       .refine((val) => val === '' || z.string().url().safeParse(val).success, 'Enter a valid URL'),
     location: z.string().max(255, 'Location must be 255 characters or less'),
-    salaryMin: z.number().nonnegative('Salary must be a positive number').nullable(),
-    salaryMax: z.number().nonnegative('Salary must be a positive number').nullable(),
+    salaryMin: z
+      .number()
+      .int('Salary must be a whole number')
+      .nonnegative('Salary must not be negative')
+      .nullable(),
+    salaryMax: z
+      .number()
+      .int('Salary must be a whole number')
+      .nonnegative('Salary must not be negative')
+      .nullable(),
     description: z.string(),
   })
   .refine(

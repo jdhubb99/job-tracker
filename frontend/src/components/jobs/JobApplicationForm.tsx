@@ -196,6 +196,7 @@ export function JobApplicationForm({
                 id={`${id}-salaryMin`}
                 type="number"
                 min={0}
+                step={1}
                 placeholder="e.g. 80000"
                 value={field.value ?? ''}
                 onChange={(e) => {
@@ -219,6 +220,7 @@ export function JobApplicationForm({
                 id={`${id}-salaryMax`}
                 type="number"
                 min={0}
+                step={1}
                 placeholder="e.g. 120000"
                 value={field.value ?? ''}
                 onChange={(e) => {
