@@ -102,13 +102,13 @@ export function JobApplicationForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label>Status</Label>
+        <Label htmlFor={`${id}-status`}>Status</Label>
         <Controller
           name="status"
           control={control}
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger id={`${id}-status`} className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -124,7 +124,7 @@ export function JobApplicationForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label>
+        <Label htmlFor={`${id}-dateApplied`}>
           Date Applied <span aria-hidden="true">*</span>
         </Label>
         <Controller
@@ -134,6 +134,7 @@ export function JobApplicationForm({
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  id={`${id}-dateApplied`}
                   variant="outline"
                   className={cn(
                     'w-full justify-start text-left font-normal',
