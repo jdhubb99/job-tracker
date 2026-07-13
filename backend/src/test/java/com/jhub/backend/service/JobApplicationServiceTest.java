@@ -292,10 +292,19 @@ class JobApplicationServiceTest {
   class UpdateApplication {
 
     @Test
-    void updatesOnlyNonNullFields() {
+    void clearsNullableFieldsWhenNull() {
+      // PUT is a full replace: sending null for the optional fields clears them.
       JobApplicationUpdateRequest request =
           new JobApplicationUpdateRequest(
-              "Updated Corp", null, null, null, null, null, null, null, null);
+              "Acme Corp",
+              "Software Engineer",
+              LocalDate.of(2026, 1, 15),
+              JobApplicationStatus.APPLIED,
+              null,
+              null,
+              null,
+              null,
+              null);
 
       when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
       when(jobApplicationRepository.saveAndFlush(any(JobApplication.class)))
@@ -303,14 +312,27 @@ class JobApplicationServiceTest {
 
       JobApplicationResponse result = service.updateApplication(userId, applicationId, request);
 
-      assertThat(result.company()).isEqualTo("Updated Corp");
-      assertThat(result.jobTitle()).isEqualTo("Software Engineer"); // unchanged
+      assertThat(result.jobPostingUrl()).isNull();
+      assertThat(result.location()).isNull();
+      assertThat(result.salaryMin()).isNull();
+      assertThat(result.salaryMax()).isNull();
+      assertThat(result.description()).isNull();
     }
 
     @Test
-    void preservesFieldsWhenRequestFieldsAreNull() {
+    void defaultsStatusToAppliedWhenNull() {
+      application.setStatus(JobApplicationStatus.INTERVIEWING);
       JobApplicationUpdateRequest request =
-          new JobApplicationUpdateRequest(null, null, null, null, null, null, null, null, null);
+          new JobApplicationUpdateRequest(
+              "Acme Corp",
+              "Software Engineer",
+              LocalDate.of(2026, 1, 15),
+              null,
+              null,
+              null,
+              null,
+              null,
+              null);
 
       when(jobApplicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
       when(jobApplicationRepository.saveAndFlush(any(JobApplication.class)))
@@ -318,8 +340,6 @@ class JobApplicationServiceTest {
 
       JobApplicationResponse result = service.updateApplication(userId, applicationId, request);
 
-      assertThat(result.company()).isEqualTo("Acme Corp");
-      assertThat(result.jobTitle()).isEqualTo("Software Engineer");
       assertThat(result.status()).isEqualTo(JobApplicationStatus.APPLIED);
     }
 

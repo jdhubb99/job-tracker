@@ -173,7 +173,15 @@ class JobApplicationControllerTest {
   void updateReturnsOkWithUpdatedResponse() throws Exception {
     JobApplicationUpdateRequest request =
         new JobApplicationUpdateRequest(
-            null, null, null, JobApplicationStatus.INTERVIEWING, null, null, null, null, null);
+            "Acme Corp",
+            "Software Engineer",
+            LocalDate.of(2026, 2, 20),
+            JobApplicationStatus.INTERVIEWING,
+            null,
+            "Remote",
+            null,
+            null,
+            null);
     JobApplicationResponse response =
         new JobApplicationResponse(
             APP_ID,
@@ -199,6 +207,25 @@ class JobApplicationControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value("INTERVIEWING"));
+  }
+
+  @Test
+  void updateReturnsBadRequestWhenRequiredFieldsMissing() throws Exception {
+    String invalidJson =
+        """
+        {"company":"","jobTitle":"","dateApplied":null}
+        """;
+
+    mockMvc
+        .perform(
+            put("/api/job-applications/{id}", APP_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidJson))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value("Validation failed"))
+        .andExpect(jsonPath("$.fieldErrors.company").exists())
+        .andExpect(jsonPath("$.fieldErrors.jobTitle").exists())
+        .andExpect(jsonPath("$.fieldErrors.dateApplied").exists());
   }
 
   @Test
