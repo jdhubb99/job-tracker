@@ -63,6 +63,15 @@ describe('createAppQueryClient', () => {
     expect(toast.error).toHaveBeenCalledWith('Mutation failed', expect.objectContaining({}));
   });
 
+  it('does not toast mutation 401 errors (handled by auth flow)', async () => {
+    const { toast } = await import('sonner');
+    const client = createAppQueryClient();
+    const onError = client.getDefaultOptions().mutations?.onError;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (onError as any)?.(new ApiError(401, null));
+    expect(toast.error).not.toHaveBeenCalled();
+  });
+
   it('surfaces query errors as toasts via the query cache', async () => {
     const { toast } = await import('sonner');
     const client = createAppQueryClient();

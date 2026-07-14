@@ -29,6 +29,11 @@ export function createAppQueryClient(): QueryClient {
       },
       mutations: {
         onError(error) {
+          // 401 is handled by the auth refresh/logout flow — a toast here would
+          // be redundant noise during a session expiry.
+          if (error instanceof ApiError && error.status === 401) {
+            return;
+          }
           notify.error(error);
         },
       },
