@@ -63,7 +63,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/**", "/actuator/**")
                     .authenticated()
                     .anyRequest()
-                    .permitAll())
+                    .denyAll())
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
     return http.build();
