@@ -109,8 +109,7 @@ class SecurityConfigIntegrationTest {
     String token = createToken(Instant.now().plusSeconds(300));
 
     mockMvc
-        .perform(
-            get("/some-undefined-path").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+        .perform(get("/some-undefined-path").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
         .andExpect(status().isForbidden());
   }
 
