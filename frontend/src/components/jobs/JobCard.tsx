@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/jobs/StatusBadge';
@@ -6,6 +6,7 @@ import type { JobApplicationResponse } from '@/lib/types';
 
 interface JobCardProps {
   job: JobApplicationResponse;
+  onEdit: (job: JobApplicationResponse) => void;
   onDelete: (job: JobApplicationResponse) => void;
 }
 
@@ -17,7 +18,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export function JobCard({ job, onDelete }: JobCardProps) {
+export function JobCard({ job, onEdit, onDelete }: JobCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-2">
@@ -25,15 +26,24 @@ export function JobCard({ job, onDelete }: JobCardProps) {
           <CardTitle className="truncate text-base">{job.company}</CardTitle>
           <p className="text-muted-foreground text-sm">{job.jobTitle}</p>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="shrink-0"
-          onClick={() => onDelete(job)}
-          aria-label={`Delete ${job.company} application`}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <div className="flex shrink-0 gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onEdit(job)}
+            aria-label={`Edit ${job.company} application`}
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDelete(job)}
+            aria-label={`Delete ${job.company} application`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
         <div className="flex items-center justify-between">

@@ -4,11 +4,13 @@ pre-commit:
   commands:
     frontend-prettier:
       glob: "frontend/**/*.{ts,tsx,js,jsx,css,json}"
+      exclude: "frontend/src/routeTree.gen.ts"
       run: frontend/node_modules/.bin/prettier --write {staged_files}
       stage_fixed: true
 
     frontend-lint:
       glob: "frontend/**/*.{ts,tsx}"
+      exclude: "frontend/src/routeTree.gen.ts"
       run: export NVM_DIR="${NVM_DIR:-$HOME/.nvm}" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use && frontend/node_modules/.bin/eslint --max-warnings=0 {staged_files}
 
     backend-format:

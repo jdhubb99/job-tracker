@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ArrowUpDown, Trash2 } from 'lucide-react';
+import { ArrowUpDown, Pencil, Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -17,6 +17,7 @@ type SortDirection = 'asc' | 'desc';
 
 interface JobsTableProps {
   jobs: JobApplicationResponse[];
+  onEdit: (job: JobApplicationResponse) => void;
   onDelete: (job: JobApplicationResponse) => void;
 }
 
@@ -61,7 +62,7 @@ function SortableHeader({
   );
 }
 
-export function JobsTable({ jobs, onDelete }: JobsTableProps) {
+export function JobsTable({ jobs, onEdit, onDelete }: JobsTableProps) {
   const [sortField, setSortField] = useState<SortField>('dateApplied');
   const [sortDir, setSortDir] = useState<SortDirection>('desc');
 
@@ -100,7 +101,7 @@ export function JobsTable({ jobs, onDelete }: JobsTableProps) {
               Applied
             </SortableHeader>
             <TableHead>Salary</TableHead>
-            <TableHead className="w-[60px]">
+            <TableHead className="w-[100px]">
               <span className="sr-only">Actions</span>
             </TableHead>
           </TableRow>
@@ -117,14 +118,24 @@ export function JobsTable({ jobs, onDelete }: JobsTableProps) {
               <TableCell>{formatDate(job.dateApplied)}</TableCell>
               <TableCell>{formatSalary(job.salaryMin, job.salaryMax)}</TableCell>
               <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onDelete(job)}
-                  aria-label={`Delete ${job.company} application`}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onEdit(job)}
+                    aria-label={`Edit ${job.company} application`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onDelete(job)}
+                    aria-label={`Delete ${job.company} application`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}
