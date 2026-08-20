@@ -76,33 +76,18 @@ public class JobApplicationService {
       UUID userId, UUID applicationId, JobApplicationUpdateRequest request) {
     JobApplication application = findApplicationByIdAndVerifyOwnership(userId, applicationId);
 
-    if (request.company() != null) {
-      application.setCompany(request.company());
-    }
-    if (request.jobTitle() != null) {
-      application.setJobTitle(request.jobTitle());
-    }
-    if (request.dateApplied() != null) {
-      application.setDateApplied(request.dateApplied());
-    }
-    if (request.status() != null) {
-      application.setStatus(request.status());
-    }
-    if (request.jobPostingUrl() != null) {
-      application.setJobPostingUrl(request.jobPostingUrl());
-    }
-    if (request.location() != null) {
-      application.setLocation(request.location());
-    }
-    if (request.salaryMin() != null) {
-      application.setSalaryMin(request.salaryMin());
-    }
-    if (request.salaryMax() != null) {
-      application.setSalaryMax(request.salaryMax());
-    }
-    if (request.description() != null) {
-      application.setDescription(request.description());
-    }
+    // PUT replaces the full resource: every field is applied, so nullable fields
+    // (URL, location, salary, description) can be cleared by sending null.
+    application.setCompany(request.company());
+    application.setJobTitle(request.jobTitle());
+    application.setDateApplied(request.dateApplied());
+    application.setStatus(
+        request.status() != null ? request.status() : JobApplicationStatus.APPLIED);
+    application.setJobPostingUrl(request.jobPostingUrl());
+    application.setLocation(request.location());
+    application.setSalaryMin(request.salaryMin());
+    application.setSalaryMax(request.salaryMax());
+    application.setDescription(request.description());
 
     JobApplication saved = jobApplicationRepository.saveAndFlush(application);
     return JobApplicationResponse.from(saved);
