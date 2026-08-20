@@ -100,6 +100,21 @@ class SecurityConfigIntegrationTest {
   }
 
   @Test
+  void undefinedPathIsRejectedWithoutToken() throws Exception {
+    mockMvc.perform(get("/some-undefined-path")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void undefinedPathIsRejectedEvenWithValidToken() throws Exception {
+    String token = createToken(Instant.now().plusSeconds(300));
+
+    mockMvc
+        .perform(
+            get("/some-undefined-path").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void corsPreflightSucceedsForProtectedRoute() throws Exception {
     mockMvc
         .perform(
