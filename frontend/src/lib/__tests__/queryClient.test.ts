@@ -1,14 +1,20 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createAppQueryClient } from '../queryClient';
 import { ApiError } from '@/lib/api';
 
 vi.mock('sonner', () => ({
   toast: {
     error: vi.fn(),
+    success: vi.fn(),
+    info: vi.fn(),
   },
 }));
 
 describe('createAppQueryClient', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('sets default staleTime to 5 minutes', () => {
     const client = createAppQueryClient();
     const defaults = client.getDefaultOptions();
@@ -54,6 +60,34 @@ describe('createAppQueryClient', () => {
     const error = new Error('Mutation failed');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (onError as any)?.(error);
-    expect(toast.error).toHaveBeenCalledWith('Mutation failed');
+    expect(toast.error).toHaveBeenCalledWith('Mutation failed', expect.objectContaining({}));
+  });
+
+  it('does not toast mutation 401 errors (handled by auth flow)', async () => {
+    const { toast } = await import('sonner');
+    const client = createAppQueryClient();
+    const onError = client.getDefaultOptions().mutations?.onError;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (onError as any)?.(new ApiError(401, null));
+    expect(toast.error).not.toHaveBeenCalled();
+  });
+
+  it('surfaces query errors as toasts via the query cache', async () => {
+    const { toast } = await import('sonner');
+    const client = createAppQueryClient();
+    const onError = client.getQueryCache().config.onError;
+    onError?.(new ApiError(500, null), {} as never);
+    expect(toast.error).toHaveBeenCalledWith(
+      'Something went wrong on our end. Please try again shortly.',
+      expect.objectContaining({})
+    );
+  });
+
+  it('does not toast query 401 errors (handled by auth flow)', async () => {
+    const { toast } = await import('sonner');
+    const client = createAppQueryClient();
+    const onError = client.getQueryCache().config.onError;
+    onError?.(new ApiError(401, null), {} as never);
+    expect(toast.error).not.toHaveBeenCalled();
   });
 });
