@@ -8,81 +8,81 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as RegisterRouteImport } from './routes/register';
-import { Route as LoginRouteImport } from './routes/login';
-import { Route as AuthRouteImport } from './routes/_auth';
-import { Route as SplatRouteImport } from './routes/$';
-import { Route as IndexRouteImport } from './routes/index';
-import { Route as AuthJobsRouteImport } from './routes/_auth/jobs';
-import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthJobsRouteImport } from './routes/_auth/jobs'
+import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthJobsRoute = AuthJobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/login': typeof LoginRoute;
-  '/register': typeof RegisterRoute;
-  '/dashboard': typeof AuthDashboardRoute;
-  '/jobs': typeof AuthJobsRoute;
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/dashboard': typeof AuthDashboardRoute
+  '/jobs': typeof AuthJobsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/login': typeof LoginRoute;
-  '/register': typeof RegisterRoute;
-  '/dashboard': typeof AuthDashboardRoute;
-  '/jobs': typeof AuthJobsRoute;
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/dashboard': typeof AuthDashboardRoute
+  '/jobs': typeof AuthJobsRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
-  '/$': typeof SplatRoute;
-  '/_auth': typeof AuthRouteWithChildren;
-  '/login': typeof LoginRoute;
-  '/register': typeof RegisterRoute;
-  '/_auth/dashboard': typeof AuthDashboardRoute;
-  '/_auth/jobs': typeof AuthJobsRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_auth/jobs': typeof AuthJobsRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/$' | '/login' | '/register' | '/dashboard' | '/jobs';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/$' | '/login' | '/register' | '/dashboard' | '/jobs';
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/$' | '/login' | '/register' | '/dashboard' | '/jobs'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/$' | '/login' | '/register' | '/dashboard' | '/jobs'
   id:
     | '__root__'
     | '/'
@@ -91,82 +91,82 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/_auth/dashboard'
-    | '/_auth/jobs';
-  fileRoutesById: FileRoutesById;
+    | '/_auth/jobs'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  SplatRoute: typeof SplatRoute;
-  AuthRoute: typeof AuthRouteWithChildren;
-  LoginRoute: typeof LoginRoute;
-  RegisterRoute: typeof RegisterRoute;
+  IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/register': {
-      id: '/register';
-      path: '/register';
-      fullPath: '/register';
-      preLoaderRoute: typeof RegisterRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
-      id: '/login';
-      path: '/login';
-      fullPath: '/login';
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth': {
-      id: '/_auth';
-      path: '';
-      fullPath: '/';
-      preLoaderRoute: typeof AuthRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$': {
-      id: '/$';
-      path: '/$';
-      fullPath: '/$';
-      preLoaderRoute: typeof SplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth/jobs': {
-      id: '/_auth/jobs';
-      path: '/jobs';
-      fullPath: '/jobs';
-      preLoaderRoute: typeof AuthJobsRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
+      id: '/_auth/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof AuthJobsRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/dashboard': {
-      id: '/_auth/dashboard';
-      path: '/dashboard';
-      fullPath: '/dashboard';
-      preLoaderRoute: typeof AuthDashboardRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
+      id: '/_auth/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthDashboardRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
-  AuthDashboardRoute: typeof AuthDashboardRoute;
-  AuthJobsRoute: typeof AuthJobsRoute;
+  AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthJobsRoute: typeof AuthJobsRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthDashboardRoute: AuthDashboardRoute,
   AuthJobsRoute: AuthJobsRoute,
-};
+}
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -174,7 +174,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

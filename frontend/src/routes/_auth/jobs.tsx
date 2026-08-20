@@ -8,6 +8,7 @@ import { JobCard } from '@/components/jobs/JobCard';
 import { JobsEmptyState } from '@/components/jobs/JobsEmptyState';
 import { JobsLoadingSkeleton } from '@/components/jobs/JobsLoadingSkeleton';
 import { DeleteJobDialog } from '@/components/jobs/DeleteJobDialog';
+import { JobApplicationDrawer } from '@/components/jobs/JobApplicationDrawer';
 import { useJobApplications, useDeleteJobApplication } from '@/hooks/useJobApplications';
 import { JOB_APPLICATION_STATUSES } from '@/lib/types';
 import type { JobApplicationResponse, JobApplicationStatus } from '@/lib/types';
@@ -32,6 +33,18 @@ function Jobs() {
   const deleteMutation = useDeleteJobApplication();
 
   const [deleteTarget, setDeleteTarget] = useState<JobApplicationResponse | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<JobApplicationResponse | null>(null);
+
+  const handleAddJob = () => {
+    setEditTarget(null);
+    setDrawerOpen(true);
+  };
+
+  const handleEditJob = (job: JobApplicationResponse) => {
+    setEditTarget(job);
+    setDrawerOpen(true);
+  };
 
   const handleStatusChange = (newStatus: JobApplicationStatus | undefined) => {
     navigate({ search: newStatus ? { status: newStatus } : {} });
@@ -50,7 +63,7 @@ function Jobs() {
         <h1 id="jobs-heading" className="text-3xl font-bold">
           Jobs
         </h1>
-        <Button disabled>
+        <Button onClick={handleAddJob}>
           <Plus className="mr-2 h-4 w-4" />
           Add Job
         </Button>
@@ -70,13 +83,13 @@ function Jobs() {
         <>
           {/* Desktop table */}
           <div className="hidden md:block">
-            <JobsTable jobs={jobs} onDelete={setDeleteTarget} />
+            <JobsTable jobs={jobs} onEdit={handleEditJob} onDelete={setDeleteTarget} />
           </div>
 
           {/* Mobile cards */}
           <div className="grid gap-3 md:hidden">
             {jobs.map((job) => (
-              <JobCard key={job.id} job={job} onDelete={setDeleteTarget} />
+              <JobCard key={job.id} job={job} onEdit={handleEditJob} onDelete={setDeleteTarget} />
             ))}
           </div>
         </>
@@ -90,6 +103,12 @@ function Jobs() {
         onConfirm={handleDelete}
         companyName={deleteTarget?.company ?? ''}
         isPending={deleteMutation.isPending}
+      />
+
+      <JobApplicationDrawer
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        jobApplication={editTarget}
       />
     </div>
   );
